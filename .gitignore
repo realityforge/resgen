@@ -1,6 +1,7 @@
 *.iml
 /*.ipr
 /*.iws
+/Gemfile.lock
 /.rakeTasks
 /patch.diff
 /pkg
