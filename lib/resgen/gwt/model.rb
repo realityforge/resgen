@@ -14,8 +14,10 @@
 
 Resgen::FacetManager.facet(:gwt) do |facet|
   facet.enhance(Resgen::Model::AssetDirectory) do
+    attr_writer :bundle_name
+
     def bundle_name
-      "#{Reality::Naming.pascal_case(asset_directory.short_name)}Resources"
+      @bundle_name || "#{Reality::Naming.pascal_case(asset_directory.short_name)}Resources"
     end
 
     def qualified_bundle_name
