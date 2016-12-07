@@ -12,28 +12,10 @@
 # limitations under the License.
 #
 
-require 'sass/css'
-
-require 'reality/core'
-require 'reality/facets'
-require 'reality/generators'
-
-require 'resgen/version'
-
-require 'resgen/core'
-
-require 'resgen/model/css_file'
-require 'resgen/model/asset_directory'
-require 'resgen/model/catalog'
-require 'resgen/model/repository'
-
-require 'resgen/facets'
-require 'resgen/generators'
-require 'resgen/filters'
-
-require 'resgen/rake_tasks'
-
-require 'resgen/gwt/model'
-require 'resgen/gwt/helper'
-require 'resgen/gwt/generator'
-
+Resgen::Generator.template_set(:gwt_client_bundle) do |template_set|
+  template_set.erb_template([:gwt],
+                            :asset_directory,
+                            "#{File.dirname(__FILE__)}/templates/client_bundle.java.erb",
+                            'main/java/#{asset_directory.gwt.qualified_bundle_name.gsub(".","/")}.java',
+                            [Resgen::Gwt::Helper])
+end

@@ -12,28 +12,12 @@
 # limitations under the License.
 #
 
-require 'sass/css'
-
-require 'reality/core'
-require 'reality/facets'
-require 'reality/generators'
-
-require 'resgen/version'
-
-require 'resgen/core'
-
-require 'resgen/model/css_file'
-require 'resgen/model/asset_directory'
-require 'resgen/model/catalog'
-require 'resgen/model/repository'
-
-require 'resgen/facets'
-require 'resgen/generators'
-require 'resgen/filters'
-
-require 'resgen/rake_tasks'
-
-require 'resgen/gwt/model'
-require 'resgen/gwt/helper'
-require 'resgen/gwt/generator'
-
+module Resgen
+  module Gwt
+    module Helper
+      def to_package(classname)
+        classname.gsub(/^(.*)\.[^.]+$/, '\1')
+      end
+    end
+  end
+end

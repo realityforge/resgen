@@ -1,0 +1,23 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(asset_directory.gwt.qualified_bundle_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public interface <%= asset_directory.gwt.bundle_name %>
+  extends com.google.gwt.resources.client.ClientBundle<%= asset_directory.gwt.with_lookup? ? 'WithLookup' : '' %>
+{
+<% asset_directory.css_files.each do |css_file| -%>
+  interface <%= Reality::Naming.pascal_case(css_file.name) %>
+    extends com.google.gwt.resources.client.CssResource
+  {
+<% css_file.css_classes.each do |key| -%>
+    String <%= key -%>();
+<% end -%>
+  }
+<% end -%>
+<% asset_directory.image_files.keys.each do |image_key| -%>
+  com.google.gwt.resources.client.ImageResource <%= image_key -%>();
+<% end -%>
+<% asset_directory.css_files.each do |css_file| -%>
+  <%= Reality::Naming.pascal_case(css_file.name) %> <%= css_file.name %>();
+<% end -%>
+}

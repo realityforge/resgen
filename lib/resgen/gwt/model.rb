@@ -12,28 +12,20 @@
 # limitations under the License.
 #
 
-require 'sass/css'
+Resgen::FacetManager.facet(:gwt) do |facet|
+  facet.enhance(Resgen::Model::AssetDirectory) do
+    def bundle_name
+      "#{Reality::Naming.pascal_case(asset_directory.short_name)}Resources"
+    end
 
-require 'reality/core'
-require 'reality/facets'
-require 'reality/generators'
+    def qualified_bundle_name
+      "#{asset_directory.name}.#{bundle_name}"
+    end
 
-require 'resgen/version'
+    attr_writer :with_lookup
 
-require 'resgen/core'
-
-require 'resgen/model/css_file'
-require 'resgen/model/asset_directory'
-require 'resgen/model/catalog'
-require 'resgen/model/repository'
-
-require 'resgen/facets'
-require 'resgen/generators'
-require 'resgen/filters'
-
-require 'resgen/rake_tasks'
-
-require 'resgen/gwt/model'
-require 'resgen/gwt/helper'
-require 'resgen/gwt/generator'
-
+    def with_lookup?
+      !!(@with_lookup ||= false)
+    end
+  end
+end
