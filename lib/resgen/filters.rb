@@ -14,6 +14,14 @@
 
 module Resgen #nodoc
   class Filters
+    def self.include_catalog_below(path)
+      path = File.expand_path(path)
+      Proc.new do |artifact_type, artifact|
+        catalog = catalog_for(artifact_type, artifact)
+        catalog.nil? || catalog.absolute_path.start_with?(path)
+      end
+    end
+
     def self.include_catalogs(catalog_names)
       catalog_names = catalog_names.is_a?(Array) ? catalog_names : [catalog_names]
       Proc.new { |artifact_type, artifact| is_in_catalogs?(catalog_names, artifact_type, artifact) }
