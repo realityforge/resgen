@@ -15,6 +15,8 @@
 require 'sass/css'
 
 require 'reality/core'
+require 'reality/facets'
+require 'reality/generators'
 
 require 'resgen/version'
 
