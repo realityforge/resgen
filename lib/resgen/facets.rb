@@ -12,18 +12,13 @@
 # limitations under the License.
 #
 
-require 'sass/css'
+module Resgen #nodoc
+  module FacetManager
+    extend Reality::Facets::FacetContainer
+  end
 
-require 'reality/core'
-require 'reality/facets'
-require 'reality/generators'
-
-require 'resgen/version'
-
-require 'resgen/core'
-
-require 'resgen/model/css_file'
-require 'resgen/model/asset_directory'
-require 'resgen/facets'
-require 'resgen/generators'
-
+  FacetManager.target_manager.target(Resgen::Model::Repository, :repository)
+  FacetManager.target_manager.target(Resgen::Model::Catalog, :catalog, :repository)
+  FacetManager.target_manager.target(Resgen::Model::AssetDirectory, :asset_directory, :catalog)
+  FacetManager.target_manager.target(Resgen::Model::CssFile, :css_file, :asset_directory)
+end
