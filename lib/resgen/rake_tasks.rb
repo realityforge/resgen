@@ -102,9 +102,6 @@ module Resgen #nodoc
       desc self.description || "Generates the #{key} artifacts."
       namespace self.namespace_key do
         t = task self.key => ["#{self.namespace_key}:load"] do
-          old_level = Resgen::Logger.level
-          old_generators_level = Reality::Generators::Logger.level
-          old_facets_level = Reality::Facets::Logger.level
           begin
 
             repository = nil
@@ -125,16 +122,18 @@ module Resgen #nodoc
             repository.send(:extension_point, :scan_if_required)
             repository.send(:extension_point, :validate)
 
-            Resgen::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN
-            Reality::Generators::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN
-            Reality::Facets::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN
-            Logger.info "Generator started: Generating #{self.generator_keys.inspect}"
-            Resgen::Generator.generator.generate(Resgen::Generator,
-                                                 :repository,
-                                                 repository,
-                                                 self.target_dir,
-                                                 @templates,
-                                                 self.filter)
+            Reality::Logging.set_levels(verbose? ? ::Logger::DEBUG : ::Logger::WARN,
+                                        Resgen::Logger,
+                                        Reality::Generators::Logger,
+                                        Reality::Facets::Logger) do
+              Resgen.info "Generator started: Generating #{self.generator_keys.inspect}"
+              Resgen::Generator.generator.generate(Resgen::Generator,
+                                                   :repository,
+                                                   repository,
+                                                   self.target_dir,
+                                                   @templates,
+                                                   self.filter)
+            end
           rescue Reality::Generators::GeneratorError => e
             puts e.message
             if e.cause
@@ -142,10 +141,6 @@ module Resgen #nodoc
               puts e.cause.backtrace.join("\n")
             end
             raise e.message
-          ensure
-            Resgen::Logger.level = old_level
-            Reality::Generators::Logger.level = old_generators_level
-            Reality::Facets::Logger.level = old_facets_level
           end
         end
         @task_name = t.name
@@ -182,13 +177,15 @@ module Resgen #nodoc
 
         desc self.description
         task :load => [:preload, self.filename] do
-          old_level = Resgen::Logger.level
-          old_generators_level = Reality::Generators::Logger.level
           begin
-            Resgen::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN
-            Reality::Generators::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN
             Resgen.current_filename = self.filename
-            require self.filename
+            Reality::Logging.set_levels(verbose? ? ::Logger::DEBUG : ::Logger::WARN,
+                                        Resgen::Logger,
+                                        Reality::Generators::Logger,
+                                        Reality::Facets::Logger) do
+
+              require self.filename
+            end
           rescue Exception => e
             print "An error occurred loading repository\n"
             puts $!
@@ -196,8 +193,6 @@ module Resgen #nodoc
             raise e
           ensure
             Resgen.current_filename = nil
-            Resgen::Logger.level = old_level
-            Reality::Generators::Logger.level = old_generators_level
           end
           task("#{self.namespace_key}:postload").invoke
         end
