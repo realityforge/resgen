@@ -19,16 +19,27 @@ module Resgen #nodoc
     end
 
     class CssFile < Reality::BaseElement
-      def initialize(name, filename, options = {}, &block)
-        super(options, &block)
-        @name, @filename = name, filename
+      def initialize(asset_directory, name, filename, options = {}, &block)
+        @asset_directory = asset_directory
+        @name = name
+        @filename = filename
         @css_classes = []
+
+        Resgen::FacetManager.target_manager.apply_extension(self)
+        Resgen.info "CssFile '#{name}' definition started"
+        super(options, &block)
+        Resgen.info "CssFile '#{name}' definition completed"
       end
 
+      attr_reader :asset_directory
       attr_reader :name
       attr_reader :filename
       attr_reader :css_classes
       attr_reader :last_updated_at
+
+      def scan_if_required
+        scan! if scan?
+      end
 
       def removed?
         !File.exist?(self.filename)

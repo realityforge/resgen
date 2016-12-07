@@ -24,6 +24,9 @@ require 'resgen/core'
 
 require 'resgen/model/css_file'
 require 'resgen/model/asset_directory'
+require 'resgen/model/catalog'
+require 'resgen/model/repository'
+
 require 'resgen/facets'
 require 'resgen/generators'
 
