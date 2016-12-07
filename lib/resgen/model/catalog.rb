@@ -31,6 +31,10 @@ module Resgen #nodoc
       attr_reader :name
       attr_reader :path
 
+      def absolute_path
+        @absolute_path ||= self.repository.resolve_filename(self.path)
+      end
+
       def asset_directory(name, options = {}, &block)
         AssetDirectory.new(self, name, options, &block)
       end
