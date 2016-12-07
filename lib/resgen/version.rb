@@ -12,6 +12,6 @@
 # limitations under the License.
 #
 
-module Resgen
+module Resgen #nodoc
   VERSION = '1.0.0'
 end
