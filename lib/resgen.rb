@@ -14,7 +14,7 @@
 
 require 'sass/css'
 
-require 'reality/base_element'
+require 'reality/core'
 
 require 'resgen/version'
 
