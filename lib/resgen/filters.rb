@@ -28,10 +28,16 @@ module Resgen #nodoc
     end
 
     def self.is_in_catalog?(catalog_name, artifact_type, artifact)
-      (artifact_type == :repository) ||
-        (artifact_type == :catalog && artifact.name.to_s == catalog_name.to_s) ||
-        (artifact_type == :asset_directory && artifact.catalog.name.to_s == catalog_name.to_s) ||
-        (artifact_type == :css_file && artifact.asset_directory.catalog.name.to_s == catalog_name.to_s)
+      catalog = catalog_for(artifact_type, artifact)
+      catalog.nil? || catalog.name.to_s == catalog_name.to_s
+    end
+
+    def self.catalog_for(artifact_type, artifact)
+      return nil if artifact_type == :repository
+      return artifact if artifact_type == :catalog
+      return artifact.catalog if artifact_type == :asset_directory
+      return artifact.asset_directory.catalog if artifact_type == :css_file
+      raise "Unknown artifact type #{artifact_type}"
     end
   end
 end
