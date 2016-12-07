@@ -123,6 +123,7 @@ module Resgen #nodoc
             end
 
             repository.send(:extension_point, :scan_if_required)
+            repository.send(:extension_point, :validate)
 
             Resgen::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN
             Reality::Generators::Logger.level = verbose? ? ::Logger::DEBUG : ::Logger::WARN

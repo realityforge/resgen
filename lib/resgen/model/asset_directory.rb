@@ -45,12 +45,25 @@ module Resgen #nodoc
         @css_files.values
       end
 
+      def css_files?
+        !@css_files.empty?
+      end
+
       def image_files
         @image_files.dup
       end
 
+      def image_files?
+        !@image_files.empty?
+      end
+
       def scan_if_required
         scan! if scan?
+      end
+
+      def validate
+        Resgen.error("Asset directory #{self.filename} has been removed.") if removed?
+        Resgen.error("Asset directory #{self.filename} contains no resources.") if !css_files? && !image_files?
       end
 
       def removed?
