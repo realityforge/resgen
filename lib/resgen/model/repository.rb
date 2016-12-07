@@ -84,8 +84,8 @@ module Resgen #nodoc
       end
 
       def resolve_filename(filename)
-        return filename unless self.source_file
-        filename =~ /^\// ? filename : File.expand_path("#{File.dirname(self.source_file)}/#{filename}")
+        return filename unless self.filename
+        filename =~ /^\// ? filename : File.expand_path("#{File.dirname(self.filename)}/#{filename}")
       end
 
       private
