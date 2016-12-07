@@ -29,6 +29,7 @@ require 'resgen/model/repository'
 
 require 'resgen/facets'
 require 'resgen/generators'
+require 'resgen/filters'
 
 require 'resgen/rake_tasks'
 
