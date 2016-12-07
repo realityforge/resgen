@@ -22,24 +22,6 @@ module Resgen #nodoc
       end
     end
 
-    def self.include_catalogs(catalog_names)
-      catalog_names = catalog_names.is_a?(Array) ? catalog_names : [catalog_names]
-      Proc.new { |artifact_type, artifact| is_in_catalogs?(catalog_names, artifact_type, artifact) }
-    end
-
-    def self.include_catalog(catalog_name)
-      Proc.new { |artifact_type, artifact| is_in_catalog?(catalog_name, artifact_type, artifact) }
-    end
-
-    def self.is_in_catalogs?(catalog_names, artifact_type, artifact)
-      catalog_names.any? { |catalog_name| is_in_catalog?(catalog_name, artifact_type, artifact) }
-    end
-
-    def self.is_in_catalog?(catalog_name, artifact_type, artifact)
-      catalog = catalog_for(artifact_type, artifact)
-      catalog.nil? || catalog.name.to_s == catalog_name.to_s
-    end
-
     def self.catalog_for(artifact_type, artifact)
       return nil if artifact_type == :repository
       return artifact if artifact_type == :catalog
