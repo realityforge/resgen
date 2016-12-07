@@ -27,3 +27,5 @@ require 'resgen/model/asset_directory'
 require 'resgen/facets'
 require 'resgen/generators'
 
+require 'resgen/rake_tasks'
+
