@@ -24,7 +24,7 @@ end
     template_set.erb_template([:gwt],
                               :catalog,
                               "#{File.dirname(__FILE__)}/templates/catalog_test_module.java.erb",
-                              'main/java/#{catalog.gwt.qualified_test_module_name.gsub(".","/")}.java',
+                              type + '/java/#{catalog.gwt.qualified_test_module_name.gsub(".","/")}.java',
                               [Resgen::Gwt::Helper])
   end
 end
