@@ -78,9 +78,6 @@ module Resgen #nodoc
       @template_map = {}
       # Turn on verbose messages if buildr is turned on tracing
       @verbose = trace?
-      if buildr_project.nil? && Buildr.application.current_scope.size > 0
-        buildr_project = Buildr.project(Buildr.application.current_scope.join(':')) rescue nil
-      end
       @target_dir = target_dir
       yield self if block_given?
       define
