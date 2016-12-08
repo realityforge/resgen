@@ -199,18 +199,22 @@ module Resgen #nodoc
   end
 
   class TaskRegistry
-    @@namespace_tasks = {}
-
-
-    def self.get_aggregate_task(namespace)
-      all_task = @@namespace_tasks[namespace.to_s]
-      unless all_task
-        desc "Generate all #{namespace} artifacts"
-        all_task = task('all')
-        @@namespace_tasks[namespace.to_s] = all_task
+    class << self
+      def get_aggregate_task(namespace)
+        all_task = namespace_tasks[namespace.to_s]
+        unless all_task
+          desc "Generate all #{namespace} artifacts"
+          all_task = task('all')
+          namespace_tasks[namespace.to_s] = all_task
+        end
+        all_task
       end
-      all_task
-    end
 
+      private
+
+      def namespace_tasks
+        @namespace_tasks ||= {}
+      end
+    end
   end
 end
