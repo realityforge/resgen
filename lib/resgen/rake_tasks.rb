@@ -141,7 +141,7 @@ module Resgen #nodoc
           end
         end
         @task_name = t.name
-        Resgen::TaskRegistry.append_to_all_task(self.namespace_key, t.name)
+        Resgen::TaskRegistry.get_aggregate_task(self.namespace_key).enhance([t.name])
       end
     end
   end
@@ -201,9 +201,6 @@ module Resgen #nodoc
   class TaskRegistry
     @@namespace_tasks = {}
 
-    def self.append_to_all_task(namespace, task_name)
-      get_aggregate_task(namespace).enhance([task_name])
-    end
 
     def self.get_aggregate_task(namespace)
       all_task = @@namespace_tasks[namespace.to_s]
