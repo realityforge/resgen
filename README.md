@@ -8,6 +8,6 @@ Visit the [Resgen site](http://realityforge.org/resgen/) for further details.
 
 ## TODO
 
-* Extract templates/generator infrastructure from domgen. This includes templates, render_context etc.
-  Also enhance it to simplify the creation of the rake/buildr tasks for resgen and add support for generating
-  documentation.
+* Abstract the rake task definitions into reality-generators somehow.
+* Add tests for the model objects.
+* Try and figure out how to write tests for generators.
