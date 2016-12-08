@@ -19,3 +19,12 @@ Resgen::Generator.template_set(:gwt_client_bundle) do |template_set|
                             'main/java/#{asset_directory.gwt.qualified_bundle_name.gsub(".","/")}.java',
                             [Resgen::Gwt::Helper])
 end
+%w(main test).each do |type|
+  Resgen::Generator.template_set(:"gwt_#{type}_qa_support") do |template_set|
+    template_set.erb_template([:gwt],
+                              :catalog,
+                              "#{File.dirname(__FILE__)}/templates/catalog_test_module.java.erb",
+                              'main/java/#{catalog.gwt.qualified_test_module_name.gsub(".","/")}.java',
+                              [Resgen::Gwt::Helper])
+  end
+end

@@ -1,0 +1,23 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(catalog.gwt.qualified_test_module_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public class <%= catalog.gwt.test_module_name %>
+  extends org.realityforge.guiceyloops.shared.AbstractModule
+{
+  @java.lang.Override
+  protected void configure()
+  {
+    binder().disableCircularProxies();
+<% catalog.asset_directories.each do |asset_directory| -%>
+    bind<%= Reality::Naming.pascal_case(asset_directory.name.to_s.gsub('.','_')) %>();
+<% end -%>
+  }
+
+<% catalog.asset_directories.each do |asset_directory| -%>
+  protected void bind<%= Reality::Naming.pascal_case(asset_directory.name.to_s.gsub('.','_')) %>()
+  {
+    bindMock( <%= asset_directory.gwt.qualified_bundle_name %>.class );
+  }
+<% end -%>
+}
