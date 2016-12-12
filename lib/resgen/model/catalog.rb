@@ -45,7 +45,7 @@ module Resgen #nodoc
 
       def asset_directory_by_name(name)
         asset_directory = asset_directory_map[name.to_s]
-        raise "Unable to locate asset directory '#{name}' in repository '#{name}'" unless asset_directory
+        raise "Unable to locate asset directory '#{name}' in repository '#{self.name}'" unless asset_directory
         asset_directory
       end
 
