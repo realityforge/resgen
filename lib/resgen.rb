@@ -42,3 +42,4 @@ require 'resgen/gwt/model'
 require 'resgen/gwt/helper'
 require 'resgen/gwt/generator'
 
+require 'resgen/mvp/model'
