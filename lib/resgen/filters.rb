@@ -27,6 +27,8 @@ module Resgen #nodoc
       return artifact if artifact_type == :catalog
       return artifact.catalog if artifact_type == :asset_directory
       return artifact.asset_directory.catalog if artifact_type == :css_file
+      return artifact.asset_directory.catalog if artifact_type == :uibinder_file
+      return artifact.uibinder_file.asset_directory.catalog if artifact_type == :uibinder_field
       raise "Unknown artifact type #{artifact_type}"
     end
   end

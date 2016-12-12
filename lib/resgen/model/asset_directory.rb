@@ -24,6 +24,7 @@ module Resgen #nodoc
         @filename = "#{catalog.path}/#{name.gsub('.', '/')}"
         @css_files = {}
         @image_files = {}
+        @uibinder_files = {}
         @catalog.send :register_asset_directory, self
         Resgen::FacetManager.target_manager.apply_extension(self)
         Resgen.info "AssetDirectory '#{name}' definition started"
@@ -48,6 +49,14 @@ module Resgen #nodoc
         !@css_files.empty?
       end
 
+      def uibinder_files
+        @uibinder_files.values
+      end
+
+      def uibinder_files?
+        !@uibinder_files.empty?
+      end
+
       def image_files
         @image_files.dup
       end
@@ -62,7 +71,7 @@ module Resgen #nodoc
 
       def validate
         Resgen.error("Asset directory #{self.filename} has been removed.") if removed?
-        Resgen.error("Asset directory #{self.filename} contains no resources.") if !css_files? && !image_files?
+        Resgen.error("Asset directory #{self.filename} contains no resources.") if !css_files? && !image_files? && !uibinder_files?
       end
 
       def removed?
@@ -76,7 +85,8 @@ module Resgen #nodoc
 
       def scan!
         image_files = {}
-        stylesheets = {}
+        stylesheet_filenames = {}
+        uibinder_filenames = {}
 
         last_updated_at = File.mtime(self.filename).to_i
         Dir["#{self.filename}/*"].sort.each do |f|
@@ -85,8 +95,10 @@ module Resgen #nodoc
           extension = File.extname(f)
           if IMAGE_EXTENSIONS.include?(extension)
             image_files[File.basename(f, extension)] = f
-          elsif CSS_EXTENSIONS.include?(extension)
-            stylesheets[File.basename(f, extension)] = f
+          elsif CssFile::EXTENSION == extension
+            stylesheet_filenames[File.basename(f, extension)] = f
+          elsif f.end_with?(UiBinderFile::EXTENSION)
+            uibinder_filenames[File.basename(f, UiBinderFile::EXTENSION)] = f
           else
             next
           end
@@ -95,14 +107,20 @@ module Resgen #nodoc
         end
 
         css_files = {}
-        stylesheets.each_pair do |name, filename|
+        stylesheet_filenames.each_pair do |name, filename|
           css_files[name] = @css_files[name].nil? ? CssFile.new(self, name, filename) : @css_files[name]
           css_files[name].scan! if css_files[name].scan?
+        end
+        uibinder_files = {}
+        uibinder_filenames.each_pair do |name, filename|
+          uibinder_files[name] = @css_files[name].nil? ? UiBinderFile.new(self, name, filename) : @css_files[name]
+          uibinder_files[name].scan! if uibinder_files[name].scan?
         end
 
         @last_updated_at = last_updated_at
         @image_files = image_files
         @css_files = css_files
+        @uibinder_files = uibinder_files
       end
     end
   end

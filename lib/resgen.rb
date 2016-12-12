@@ -23,7 +23,9 @@ require 'resgen/version'
 
 require 'resgen/core'
 
+require 'resgen/model/single_file_model'
 require 'resgen/model/css_file'
+require 'resgen/model/uibinder_file'
 require 'resgen/model/asset_directory'
 require 'resgen/model/catalog'
 require 'resgen/model/repository'
