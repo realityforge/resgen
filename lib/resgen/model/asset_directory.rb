@@ -17,7 +17,6 @@ module Resgen #nodoc
 
     class AssetDirectory < Reality::BaseElement
       IMAGE_EXTENSIONS = %w(.png .gif .jpg .jpeg)
-      CSS_EXTENSIONS = %w(.css)
 
       def initialize(catalog, name, options = {}, &block)
         @name = name
