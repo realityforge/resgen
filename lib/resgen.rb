@@ -32,6 +32,8 @@ require 'resgen/facets'
 require 'resgen/generators'
 require 'resgen/filters'
 
+require 'resgen/css_util'
+
 require 'resgen/rake_tasks'
 
 require 'resgen/gwt/model'
