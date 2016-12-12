@@ -5,6 +5,8 @@ package <%= to_package(asset_directory.gwt.qualified_bundle_name) %>;
 public interface <%= asset_directory.gwt.bundle_name %>
   extends com.google.gwt.resources.client.ClientBundle<%= asset_directory.gwt.with_lookup? ? 'WithLookup' : '' %>
 {
+  public static final <%= asset_directory.gwt.bundle_name %> INSTANCE = com.google.gwt.core.shared.GWT.create( <%= asset_directory.gwt.bundle_name %>.class );
+
 <% asset_directory.css_files.each do |css_file| -%>
   interface <%= Reality::Naming.pascal_case(css_file.name) %>
     extends com.google.gwt.resources.client.CssResource
