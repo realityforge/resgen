@@ -32,13 +32,3 @@ Resgen::Generator.template_set(:gwt_abstract_uibinder_component) do |template_se
                             'main/java/#{uibinder_file.gwt.qualified_mvp_ui_component_name.gsub(".","/")}.java',
                             [Resgen::Gwt::Helper])
 end
-
-%w(main test).each do |type|
-  Resgen::Generator.template_set(:"gwt_#{type}_qa_support") do |template_set|
-    template_set.erb_template([:gwt],
-                              :catalog,
-                              "#{File.dirname(__FILE__)}/templates/catalog_test_module.java.erb",
-                              type + '/java/#{catalog.gwt.qualified_test_module_name.gsub(".","/")}.java',
-                              [Resgen::Gwt::Helper])
-  end
-end

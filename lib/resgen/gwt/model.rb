@@ -13,24 +13,6 @@
 #
 
 Resgen::FacetManager.facet(:gwt) do |facet|
-  facet.enhance(Resgen::Model::Catalog) do
-    attr_writer :base_package
-
-    def base_package
-      @base_package || "#{Reality::Naming.underscore(catalog.repository.name)}.#{Reality::Naming.underscore(catalog.name)}"
-    end
-
-    attr_writer :test_module_name
-
-    def test_module_name
-      @test_module_name || "#{Reality::Naming.pascal_case(catalog.name)}ResgenResourcesTestModule"
-    end
-
-    def qualified_test_module_name
-      "#{base_package}.test.util.#{test_module_name}"
-    end
-  end
-
   facet.enhance(Resgen::Model::AssetDirectory) do
     attr_writer :bundle_name
 
