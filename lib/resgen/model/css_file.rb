@@ -15,69 +15,25 @@
 module Resgen #nodoc
   module Model #nodoc
 
-    class BadCssFile < Exception
-    end
+    class CssFile < SingleFileModel
+      EXTENSION = '.css'
 
-    class CssFile < Reality::BaseElement
       def initialize(asset_directory, name, filename, options = {}, &block)
         @asset_directory = asset_directory
         @name = name
-        @filename = filename
         @css_classes = []
 
-        Resgen::FacetManager.target_manager.apply_extension(self)
         Resgen.info "CssFile '#{name}' definition started"
-        super(options, &block)
+        super(filename, options, &block)
         Resgen.info "CssFile '#{name}' definition completed"
       end
 
       attr_reader :asset_directory
       attr_reader :name
-      attr_reader :filename
       attr_reader :css_classes
-      attr_reader :last_updated_at
 
-      def scan_if_required
-        scan! if scan?
-      end
-
-      def removed?
-        !File.exist?(self.filename)
-      end
-
-      def scan?
-        return false if removed?
-        (@last_updated_at || 0) < File.mtime(self.filename).to_i
-      end
-
-      def scan!
-        css_file_contents = IO.read(self.filename)
-        last_updated_at = File.mtime(self.filename).to_i
-
-        css_classes = []
-
-        begin
-          root = Sass::SCSS::CssParser.new(css_file_contents, self.filename, nil).parse
-        rescue => e
-          raise BadCssFile, "Unable to parse CSS file #{self.filename}"
-        end
-
-        root.children.each do |child|
-          next unless child.is_a?(Sass::Tree::RuleNode)
-          # Each rule can have a separate comma separate clause
-          child.parsed_rules.members.each do |clause|
-            clause.members.each do |e|
-
-              # e can be a separate classifier chain ala input.a.b
-              e.to_s.split('.')[1...100000].each do |classname|
-                css_classes << classname
-              end
-            end
-          end
-        end
-
-        @last_updated_at = last_updated_at
-        @css_classes = css_classes.sort.uniq
+      def process_file_contents(css_file_contents)
+        @css_classes = Resgen::CssUtil.extract_css_classes(self.filename, css_file_contents)
       end
     end
   end
