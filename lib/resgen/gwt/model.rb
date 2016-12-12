@@ -48,4 +48,30 @@ Resgen::FacetManager.facet(:gwt) do |facet|
       !!(@with_lookup ||= false)
     end
   end
+
+  facet.enhance(Resgen::Model::UiBinderFile) do
+    attr_writer :abstract_ui_component_name
+
+    def abstract_ui_component_name
+      @abstract_ui_component_name || "Abstract#{uibinder_file.mvp? ? 'Simple' : ''}#{uibinder_file.name}"
+    end
+
+    def qualified_abstract_ui_component_name
+      "#{uibinder_file.asset_directory.name}.#{abstract_ui_component_name}"
+    end
+
+    def qualified_ui_component_name
+      qualified_abstract_ui_component_name.gsub(/(.*)\.Abstract#{uibinder_file.mvp? ? 'Simple' : ''}([^.]+)$/,'\1.\2')
+    end
+
+    attr_writer :mvp_ui_component_name
+
+    def mvp_ui_component_name
+      @mvp_ui_component_name || "Abstract#{uibinder_file.name}"
+    end
+
+    def qualified_mvp_ui_component_name
+      "#{uibinder_file.asset_directory.name}.#{mvp_ui_component_name}"
+    end
+  end
 end

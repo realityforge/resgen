@@ -1,0 +1,49 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(uibinder_file.gwt.qualified_mvp_ui_component_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public abstract class <%= uibinder_file.gwt.mvp_ui_component_name %><P extends org.realityforge.gwt.mmvp.Presenter>
+  extends <%= uibinder_file.gwt.qualified_abstract_ui_component_name %>
+  implements org.realityforge.gwt.mmvp.View<P>
+{
+  @javax.annotation.Nullable
+  private P _presenter;
+
+  protected <%= uibinder_file.gwt.mvp_ui_component_name %>()
+  {
+  }
+
+  protected <%= uibinder_file.gwt.mvp_ui_component_name %>( final boolean createAndBindUi )
+  {
+    super( createAndBindUi );
+  }
+
+  @Override
+  public void bind( @javax.annotation.Nonnull final P presenter )
+  {
+    if ( null != _presenter )
+    {
+      unbind();
+    }
+    _presenter = presenter;
+  }
+
+  public void unbind()
+  {
+    _presenter = null;
+  }
+
+  @java.lang.SuppressWarnings( "NullableProblems" )
+  @javax.annotation.Nonnull
+  protected P getPresenter()
+  {
+    if ( null == _presenter )
+    {
+      throw new java.lang.IllegalStateException( "Attempting to call getPresenter() when null" );
+    }
+    else
+    {
+      return _presenter;
+    }
+  }
+}

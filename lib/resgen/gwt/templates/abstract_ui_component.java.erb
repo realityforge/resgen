@@ -1,0 +1,73 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(uibinder_file.gwt.qualified_abstract_ui_component_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
+  implements com.google.gwt.user.client.ui.IsWidget
+{
+<% uibinder_file.fields.each do |field| -%>
+  protected static final String <%= Reality::Naming.uppercase_constantize(field.name.gsub(/^\_/,'')) %> = "<%= field.name %>";
+<% end -%>
+
+<% uibinder_file.styles.each do |style| -%>
+  public interface <%= Reality::Naming.pascal_case(style.name) %>
+    extends com.google.gwt.resources.client.CssResource
+  {
+<% style.css_classes.each do |key| -%>
+    String <%= key -%>();
+<% end -%>
+  }
+<% end -%>
+
+  @com.google.gwt.uibinder.client.UiTemplate( "<%= uibinder_file.name %>.ui.xml" )
+  interface Binder
+    extends com.google.gwt.uibinder.client.UiBinder<com.google.gwt.user.client.ui.Widget, <%= uibinder_file.gwt.qualified_ui_component_name %>>
+  {
+  }
+
+  private static final Binder UI_BINDER = com.google.gwt.core.client.GWT.create( Binder.class );
+
+  private com.google.gwt.user.client.ui.Widget _widget;
+<% uibinder_file.fields.each do |field| -%>
+  @com.google.gwt.uibinder.client.UiField
+  <%= field.type %> <%= field.name %>;
+<% end -%>
+
+  protected <%= uibinder_file.gwt.abstract_ui_component_name %>()
+  {
+    this( true );
+  }
+
+  protected <%= uibinder_file.gwt.abstract_ui_component_name %>( final boolean createAndBindUi )
+  {
+    if ( createAndBindUi )
+    {
+      createAndBindUi();
+    }
+  }
+
+  @java.lang.Override
+  public com.google.gwt.user.client.ui.Widget asWidget()
+  {
+    return _widget;
+  }
+
+  protected void createAndBindUi()
+  {
+    _widget = UI_BINDER.createAndBindUi( (<%= uibinder_file.gwt.qualified_ui_component_name %>) this );
+<% uibinder_file.styles.each do |style| -%>
+    <%= style.name %>.ensureInjected();
+<% end -%>
+<% !if uibinder_file.fields.empty? -%>
+<% uibinder_file.asset_directory.repository.asset_directories.each do |asset_directory| -%>
+<% uibinder_file.fields.each do |field| -%>
+<% if field.type.to_s == asset_directory.gwt.qualified_bundle_name.to_s -%>
+<% asset_directory.css_files.each do |css_file| -%>
+  <%= field.name %>.<%= css_file.name %>().ensureInjected();
+<% end -%>
+<% end -%>
+<% end -%>
+<% end -%>
+<% end -%>
+  }
+}
