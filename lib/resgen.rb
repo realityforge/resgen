@@ -13,6 +13,7 @@
 #
 
 require 'sass/css'
+require 'nokogiri'
 
 require 'reality/core'
 require 'reality/facets'
