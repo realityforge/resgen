@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'reality-core', '>= 1.5.0'
   s.add_dependency 'reality-facets', '>= 1.2.0'
   s.add_dependency 'reality-generators', '>= 1.2.0'
-  s.add_dependency 'reality-naming', '>= 1.4.0'
+  s.add_dependency 'reality-naming', '>= 1.5.0'
   s.add_dependency 'sass', '>= 3.4.22'
 
   s.add_development_dependency(%q<minitest>, ['= 5.9.1'])
