@@ -9,12 +9,12 @@ public class <%= catalog.gwt.test_module_name %>
   protected void configure()
   {
     binder().disableCircularProxies();
-<% catalog.asset_directories.each do |asset_directory| -%>
+<% catalog.asset_directories.select{|asset_directory| asset_directory.css_files? || asset_directory.image_files? }.each do |asset_directory| -%>
     bind<%= Reality::Naming.pascal_case(asset_directory.name.to_s.gsub('.','_')) %>();
 <% end -%>
   }
+<% catalog.asset_directories.select{|asset_directory| asset_directory.css_files? || asset_directory.image_files? }.each do |asset_directory| -%>
 
-<% catalog.asset_directories.each do |asset_directory| -%>
   protected void bind<%= Reality::Naming.pascal_case(asset_directory.name.to_s.gsub('.','_')) %>()
   {
     bindMock( <%= asset_directory.gwt.qualified_bundle_name %>.class );
