@@ -89,7 +89,7 @@ module Resgen #nodoc
 
       def field_by_name(name)
         field = field_map[name.to_s]
-        raise "Unable to locate field '#{name}' in uibinder file '#{self.name}'" unless field
+        Resgen.error("Unable to locate field '#{name}' in uibinder file '#{self.name}'") unless field
         field
       end
 
@@ -107,7 +107,7 @@ module Resgen #nodoc
 
       def style_by_name(name)
         style = style_map[name.to_s]
-        raise "Unable to locate style '#{name}' in uibinder file '#{self.name}'" unless style
+        Resgen.error("Unable to locate style '#{name}' in uibinder file '#{self.name}'") unless style
         style
       end
 
@@ -118,16 +118,17 @@ module Resgen #nodoc
       private
 
       def validate
-        raise "Uibinder file '#{self.name}' present but gwt facet not enabled" unless facet_enabled?(:gwt)
+        Resgen.error("Uibinder file '#{self.name}' present but gwt facet not enabled") unless facet_enabled?(:gwt)
       end
 
       def register_field(field)
-        raise "Attempting to override existing field '#{field.name}' in uibinder file '#{self.name}'" if field_map[field.name.to_s]
+        Resgen.error("Attempting to override existing field '#{field.name}' in uibinder file '#{self.name}'") if field_map[field.name.to_s]
         field_map[field.name.to_s] = field
       end
 
+
       def register_style(style)
-        raise "Attempting to override existing style '#{style.name}' in uibinder file '#{self.name}'" if style_map[style.name.to_s]
+        Resgen.error("Attempting to override existing style '#{style.name}' in uibinder file '#{self.name}'") if style_map[style.name.to_s]
         style_map[style.name.to_s] = style
       end
 
