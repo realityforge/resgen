@@ -33,7 +33,8 @@ module Resgen #nodoc
       attr_reader :css_classes
 
       def process_file_contents(css_file_contents)
-        @css_classes = Resgen::CssUtil.extract_css_classes(self.filename, css_file_contents)
+        css_fragment = Resgen::CssUtil.parse_css(self.filename, css_file_contents)
+        @css_classes = css_fragment.css_classes
       end
     end
   end

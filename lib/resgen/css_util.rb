@@ -18,8 +18,22 @@ module Resgen #nodoc
     end
 
     class << self
-      def extract_css_classes(filename, css_file_contents = nil)
+      class CssFragment < Reality::BaseElement
+        def initialize(filename, options = {}, &block)
+          @filename = filename
+          @css_classes = Reality::OrderedHash.new
+          @data_resources = Reality::OrderedHash.new
+          super(options, &block)
+        end
+
+        attr_reader :filename
+        attr_accessor :css_classes
+        attr_accessor :data_resources
+      end
+
+      def parse_css(filename, css_file_contents)
         css_classes = []
+        data_resources = []
 
         begin
           root = Sass::SCSS::CssParser.new(css_file_contents, filename, nil).parse
@@ -40,7 +54,18 @@ module Resgen #nodoc
             end
           end
         end
-        css_classes.sort.uniq
+
+        root.children.each do |child|
+          next unless child.is_a?(Sass::Tree::DirectiveNode)
+          next unless child.name == '@url' && child.value.size > 1
+          params = child.value[1].split(' ')
+          resource_key = params[1]
+          data_resources << resource_key
+        end
+
+        CssFragment.new(filename,
+                        :css_classes => css_classes.sort.uniq,
+                        :data_resources => data_resources.sort.uniq)
       end
     end
   end

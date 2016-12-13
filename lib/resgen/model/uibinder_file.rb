@@ -163,8 +163,9 @@ module Resgen #nodoc
           doc.xpath('//ui:style[@type]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
             key = element['field'] || 'style'
             type = element['type']
+            css_fragment = Resgen::CssUtil.parse_css(self.filename, element.text)
+            css_classes = css_fragment.css_classes
             field(key, type)
-            css_classes = Resgen::CssUtil.extract_css_classes(self.filename, element.text)
             style(key, type, css_classes)
           end
 
