@@ -17,8 +17,8 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
     String <%= key -%>();
 <% end -%>
   }
-<% end -%>
 
+<% end -%>
   @com.google.gwt.uibinder.client.UiTemplate( "<%= uibinder_file.name %>.ui.xml" )
   interface Binder
     extends com.google.gwt.uibinder.client.UiBinder<com.google.gwt.user.client.ui.Widget, <%= uibinder_file.gwt.qualified_ui_component_name %>>
@@ -63,7 +63,7 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 <% uibinder_file.fields.each do |field| -%>
 <% if field.type.to_s == asset_directory.gwt.qualified_bundle_name.to_s -%>
 <% asset_directory.css_files.each do |css_file| -%>
-  <%= field.name %>.<%= css_file.name %>().ensureInjected();
+    <%= field.name %>.<%= css_file.name %>().ensureInjected();
 <% end -%>
 <% end -%>
 <% end -%>
