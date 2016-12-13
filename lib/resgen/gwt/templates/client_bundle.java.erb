@@ -6,8 +6,8 @@ public interface <%= asset_directory.gwt.bundle_name %>
   extends com.google.gwt.resources.client.ClientBundle<%= asset_directory.gwt.with_lookup? ? 'WithLookup' : '' %>
 {
   <%= asset_directory.gwt.bundle_name %> INSTANCE = com.google.gwt.core.shared.GWT.create( <%= asset_directory.gwt.bundle_name %>.class );
-
 <% asset_directory.css_files.each do |css_file| -%>
+
   interface <%= Reality::Naming.pascal_case(css_file.name) %>
     extends com.google.gwt.resources.client.CssResource
   {
@@ -16,10 +16,23 @@ public interface <%= asset_directory.gwt.bundle_name %>
 <% end -%>
   }
 <% end -%>
-<% asset_directory.image_files.keys.each do |image_key| -%>
+<% image_keys_to_skip = [] -%>
+<% asset_directory.css_files.each do |css_file| -%>
+<% css_file.data_resources.each do |data_resource| -%>
+<% image_keys_to_skip << data_resource if asset_directory.image_file_by_key?(data_resource)  -%>
+
+  @Source( "<%= File.basename(asset_directory.image_files[Reality::Naming.underscore(data_resource)]) %>" )
+  com.google.gwt.resources.client.DataResource <%= data_resource -%>();
+<% end -%>
+<% end -%>
+<% asset_directory.image_files.keys.select{|image_key| !image_keys_to_skip.include?(image_key)}.each do |image_key| -%>
+
+  @Source( "<%= File.basename(asset_directory.image_files[image_key]) %>" )
   com.google.gwt.resources.client.ImageResource <%= image_key -%>();
 <% end -%>
 <% asset_directory.css_files.each do |css_file| -%>
+
+  @Source( "<%= File.basename(css_file.filename) %>" )
   <%= Reality::Naming.pascal_case(css_file.name) %> <%= css_file.name %>();
 <% end -%>
 }

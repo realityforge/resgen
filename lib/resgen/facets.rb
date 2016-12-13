@@ -23,5 +23,6 @@ module Resgen #nodoc
   FacetManager.target_manager.target(Resgen::Model::CssFile, :css_file, :asset_directory)
   FacetManager.target_manager.target(Resgen::Model::UiBinderFile, :uibinder_file, :asset_directory)
   FacetManager.target_manager.target(Resgen::Model::UiBinderField, :uibinder_field, :uibinder_file, :access_method => 'fields', :inverse_access_method => 'field')
+  FacetManager.target_manager.target(Resgen::Model::UiBinderParameter, :uibinder_parameter, :uibinder_file, :access_method => 'parameters', :inverse_access_method => 'parameter')
   FacetManager.target_manager.target(Resgen::Model::UiBinderStyle, :uibinder_style, :uibinder_file, :access_method => 'styles', :inverse_access_method => 'style')
 end

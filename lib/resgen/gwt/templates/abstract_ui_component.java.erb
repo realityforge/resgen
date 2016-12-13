@@ -8,7 +8,9 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 <% uibinder_file.fields.each do |field| -%>
   protected static final String <%= Reality::Naming.uppercase_constantize(field.name.gsub(/^\_/,'')) %> = "<%= field.name %>";
 <% end -%>
+<% unless uibinder_file.fields.empty? -%>
 
+<% end -%>
 <% uibinder_file.styles.each do |style| -%>
   public interface <%= Reality::Naming.pascal_case(style.name) %>
     extends com.google.gwt.resources.client.CssResource
@@ -31,6 +33,14 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 <% uibinder_file.fields.each do |field| -%>
   @com.google.gwt.uibinder.client.UiField
   <%= field.type %> <%= field.name %>;
+<% end -%>
+<% uibinder_file.parameters.each do |parameter| -%>
+  @com.google.gwt.uibinder.client.UiField
+  <%= parameter.type %> <%= parameter.name %>;
+<% end -%>
+<% uibinder_file.styles.each do |style| -%>
+  @com.google.gwt.uibinder.client.UiField
+  <%= style.type %> <%= style.name %>;
 <% end -%>
 
   protected <%= uibinder_file.gwt.abstract_ui_component_name %>()
@@ -58,12 +68,14 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 <% uibinder_file.styles.each do |style| -%>
     <%= style.name %>.ensureInjected();
 <% end -%>
-<% !if uibinder_file.fields.empty? -%>
-<% uibinder_file.asset_directory.repository.asset_directories.each do |asset_directory| -%>
-<% uibinder_file.fields.each do |field| -%>
+<% unless uibinder_file.fields.empty? && uibinder_file.parameters.empty? -%>
+<% uibinder_file.asset_directory.catalog.repository.catalogs.each do |catalog| -%>
+<% catalog.asset_directories.each do |asset_directory| -%>
+<% (uibinder_file.fields + uibinder_file.parameters).each do |field| -%>
 <% if field.type.to_s == asset_directory.gwt.qualified_bundle_name.to_s -%>
 <% asset_directory.css_files.each do |css_file| -%>
     <%= field.name %>.<%= css_file.name %>().ensureInjected();
+<% end -%>
 <% end -%>
 <% end -%>
 <% end -%>

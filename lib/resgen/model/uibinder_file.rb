@@ -35,6 +35,23 @@ module Resgen #nodoc
       attr_reader :type
     end
 
+    class UiBinderParameter < Reality::BaseElement
+      def initialize(uibinder_file, name, type, options = {}, &block)
+        @uibinder_file = uibinder_file
+        @name = name
+        @type = type
+        Resgen::FacetManager.target_manager.apply_extension(self)
+        uibinder_file.send(:register_parameter, self)
+        Resgen.info "UiBinderParameter '#{name}' definition started"
+        super(options, &block)
+        Resgen.info "UiBinderParameter '#{name}' definition completed"
+      end
+
+      attr_reader :uibinder_file
+      attr_reader :name
+      attr_accessor :type
+    end
+
     class UiBinderStyle < Reality::BaseElement
       def initialize(uibinder_file, name, type, css_classes, options = {}, &block)
         @uibinder_file = uibinder_file
@@ -97,6 +114,24 @@ module Resgen #nodoc
         field_map.values
       end
 
+      def parameter(name, type, options = {}, &block)
+        UiBinderParameter.new(self, name, type, options, &block)
+      end
+
+      def parameter_by_name?(name)
+        !!parameter_map[name.to_s]
+      end
+
+      def parameter_by_name(name)
+        parameter = parameter_map[name.to_s]
+        Resgen.error("Unable to locate parameter '#{name}' in uibinder file '#{self.name}'") unless parameter
+        parameter
+      end
+
+      def parameters
+        parameter_map.values
+      end
+
       def style(name, type, css_classes, options = {}, &block)
         UiBinderStyle.new(self, name, type, css_classes, options, &block)
       end
@@ -126,6 +161,10 @@ module Resgen #nodoc
         field_map[field.name.to_s] = field
       end
 
+      def register_parameter(parameter)
+        Resgen.error("Attempting to override existing parameter '#{parameter.name}' in uibinder file '#{self.name}'") if parameter_map[parameter.name.to_s]
+        parameter_map[parameter.name.to_s] = parameter
+      end
 
       def register_style(style)
         Resgen.error("Attempting to override existing style '#{style.name}' in uibinder file '#{self.name}'") if style_map[style.name.to_s]
@@ -136,13 +175,18 @@ module Resgen #nodoc
         @style_map ||= {}
       end
 
+      def parameter_map
+        @parameter_map ||= {}
+      end
+
       def field_map
         @field_map ||= {}
       end
 
       def process_file_contents(contents)
-        field_map.clear
-        style_map.clear
+        unhandled_fields = field_map.keys
+        unhandled_styles = style_map.keys
+        unhandled_parameters = parameter_map.keys
 
         begin
           doc = Nokogiri::XML(contents) do |config|
@@ -158,7 +202,14 @@ module Resgen #nodoc
           end
 
           doc.xpath('//ui:with', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |with_element|
-            field(with_element['field'], with_element['type'])
+            name = with_element['field']
+            type = with_element['type']
+            if parameter_by_name?(name)
+              parameter_by_name(name).type = type
+            else
+              parameter(name, type)
+            end
+            unhandled_parameters.delete(name)
           end
 
           doc.xpath('//ui:style[@type]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
@@ -166,8 +217,14 @@ module Resgen #nodoc
             type = element['type']
             css_fragment = Resgen::CssUtil.parse_css(self.filename, element.text)
             css_classes = css_fragment.css_classes
-            field(key, type)
-            style(key, type, css_classes)
+            if style_by_name?(name)
+              style = style_by_name(name)
+              style.type = type
+              style.css_classes = css_classes
+            else
+              style(key, type, css_classes)
+            end
+            unhandled_styles.delete(name)
           end
 
           doc.xpath('//@ui:field', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |field_attribute|
@@ -175,7 +232,16 @@ module Resgen #nodoc
 
             package_name = element.namespace.nil? ? 'com.google.gwt.dom.client' : package_prefixes[element.namespace.prefix]
             classname = element.namespace.nil? ? ELEMENT_NAME_MAP[element.name] : element.name
-            field(field_attribute.value, "#{package_name}.#{classname}")
+
+            name = field_attribute.value
+            type = "#{package_name}.#{classname}"
+
+            if field_by_name?(name)
+              field_by_name(name).type = type
+            else
+              field(name, type)
+            end
+            unhandled_fields.delete(name)
           end
         rescue => e
           raise BadUiBinderFile.new(e)
