@@ -32,7 +32,7 @@ module Resgen #nodoc
 
       attr_reader :uibinder_file
       attr_reader :name
-      attr_reader :type
+      attr_accessor :type
     end
 
     class UiBinderParameter < Reality::BaseElement
@@ -68,8 +68,8 @@ module Resgen #nodoc
 
       attr_reader :uibinder_file
       attr_reader :name
-      attr_reader :type
-      attr_reader :css_classes
+      attr_accessor :type
+      attr_accessor :css_classes
 
       def validate
         expected_style = "#{uibinder_file.gwt.qualified_abstract_ui_component_name}.#{Reality::Naming.pascal_case(self.name)}"
