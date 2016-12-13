@@ -24,7 +24,6 @@ module Resgen #nodoc
         @filename = "#{catalog.path}/#{name.gsub('.', '/')}"
         @css_files = {}
         @image_files = {}
-        @uibinder_files = {}
         self.catalog.send(:register_asset_directory, self)
         Resgen::FacetManager.target_manager.apply_extension(self)
         Resgen.info "AssetDirectory '#{name}' definition started"
@@ -49,12 +48,27 @@ module Resgen #nodoc
         !@css_files.empty?
       end
 
+      def uibinder_file(name, options = {}, &block)
+        filename = "#{self.catalog.absolute_path}/#{self.name.gsub('.', '/')}/#{name}#{UiBinderFile::EXTENSION}"
+        UiBinderFile.new(self, name, filename, options, &block)
+      end
+
+      def uibinder_file_by_name?(name)
+        !!uibinder_file_map[name.to_s]
+      end
+
+      def uibinder_file_by_name(name)
+        uibinder_file = uibinder_file_map[name.to_s]
+        Resgen.error("Unable to locate uibinderfile named '#{name}'") unless uibinder_file
+        uibinder_file
+      end
+
       def uibinder_files
-        @uibinder_files.values
+        uibinder_file_map.values
       end
 
       def uibinder_files?
-        !@uibinder_files.empty?
+        !uibinder_file_map.empty?
       end
 
       def image_files
@@ -111,16 +125,26 @@ module Resgen #nodoc
           css_files[name] = @css_files[name].nil? ? CssFile.new(self, name, filename) : @css_files[name]
           css_files[name].scan! if css_files[name].scan?
         end
-        uibinder_files = {}
         uibinder_filenames.each_pair do |name, filename|
-          uibinder_files[name] = @css_files[name].nil? ? UiBinderFile.new(self, name, filename) : @css_files[name]
-          uibinder_files[name].scan! if uibinder_files[name].scan?
+          uibinder_file =
+            uibinder_file_by_name?(name) ? uibinder_file_by_name(name) : UiBinderFile.new(self, name, filename)
+          uibinder_file.scan_if_required
         end
 
         @last_updated_at = last_updated_at
         @image_files = image_files
         @css_files = css_files
-        @uibinder_files = uibinder_files
+      end
+
+      private
+
+      def uibinder_file_map
+        (@uibinder_file_map ||= {})
+      end
+
+      def register_uibinder_file(uibinder_file)
+        Resgen.error("Asset directory #{self.filename} attempting to register duplicate uibinder_file with name '#{uibinder_file.name}'.") if uibinder_file_map[name.to_s]
+        uibinder_file_map[uibinder_file.name.to_s] = uibinder_file
       end
     end
   end

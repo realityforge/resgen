@@ -70,6 +70,7 @@ module Resgen #nodoc
         @fields = {}
         @css_classes = []
 
+        asset_directory.send(:register_uibinder_file, self)
         Resgen.info "UiBinderFile '#{name}' definition started"
         super(filename, options, &block)
         Resgen.info "UiBinderFile '#{name}' definition completed"
