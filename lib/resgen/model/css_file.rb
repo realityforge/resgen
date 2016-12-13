@@ -22,6 +22,7 @@ module Resgen #nodoc
         @asset_directory = asset_directory
         @name = name
         @css_classes = []
+        @data_resources = {}
 
         Resgen.info "CssFile '#{name}' definition started"
         super(filename, options, &block)
@@ -31,10 +32,12 @@ module Resgen #nodoc
       attr_reader :asset_directory
       attr_reader :name
       attr_reader :css_classes
+      attr_reader :data_resources
 
       def process_file_contents(css_file_contents)
         css_fragment = Resgen::CssUtil.parse_css(self.filename, css_file_contents)
         @css_classes = css_fragment.css_classes
+        @data_resources = css_fragment.data_resources
       end
     end
   end

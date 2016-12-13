@@ -75,6 +75,10 @@ module Resgen #nodoc
         @image_files.dup
       end
 
+      def image_file_by_key?(key)
+        !@image_files[key].nil?
+      end
+
       def image_files?
         !@image_files.empty?
       end
@@ -86,6 +90,15 @@ module Resgen #nodoc
       def validate
         Resgen.error("Asset directory #{self.filename} has been removed.") if removed?
         Resgen.error("Asset directory #{self.filename} contains no resources.") if !css_files? && !image_files? && !uibinder_files?
+
+        self.css_files.each do |css_file|
+          css_file.data_resources.each do |data_resource|
+            unless image_file_by_key?(data_resource) || image_file_by_key?(Reality::Naming.underscore(data_resource))
+              Resgen.error("Css file #{css_file.filename} contains a data resource '#{data_resource}' that does not align with an image resource named '#{data_resource}' nor '#{Reality::Naming.underscore(data_resource)}' in asset directory '#{self.filename}'.")
+            end
+          end
+        end
+
       end
 
       def removed?
