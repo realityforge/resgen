@@ -25,7 +25,7 @@ module Resgen #nodoc
         @css_files = {}
         @image_files = {}
         @uibinder_files = {}
-        @catalog.send :register_asset_directory, self
+        self.catalog.send(:register_asset_directory, self)
         Resgen::FacetManager.target_manager.apply_extension(self)
         Resgen.info "AssetDirectory '#{name}' definition started"
         super(options, &block)
