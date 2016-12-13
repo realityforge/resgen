@@ -20,7 +20,7 @@ module Resgen #nodoc
         @repository, @name, @path = repository, name, path
         @asset_directories = Reality::OrderedHash.new
 
-        repository.send :register_catalog, self
+        repository.send(:register_catalog, self)
         Resgen::FacetManager.target_manager.apply_extension(self)
         Resgen.info "Catalog '#{name}' definition started"
         super(options, &block)
