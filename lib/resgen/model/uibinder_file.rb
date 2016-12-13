@@ -243,6 +243,10 @@ module Resgen #nodoc
             end
             unhandled_fields.delete(name)
           end
+
+          Resgen.error("Uibinder file '#{self.name}' missing fields #{unhandled_fields.inspect} declared in repository definition.") unless unhandled_fields.empty?
+          Resgen.error("Uibinder file '#{self.name}' missing styles #{unhandled_styles.inspect} declared in repository definition.") unless unhandled_styles.empty?
+          Resgen.error("Uibinder file '#{self.name}' missing parameters #{unhandled_parameters.inspect} declared in repository definition.") unless unhandled_parameters.empty?
         rescue => e
           raise BadUiBinderFile.new(e)
         end
