@@ -25,10 +25,19 @@ Resgen::Generator.template_set(:gwt_abstract_uibinder_component) do |template_se
                             :uibinder_file,
                             "#{File.dirname(__FILE__)}/templates/abstract_ui_component.java.erb",
                             'main/java/#{uibinder_file.gwt.qualified_abstract_ui_component_name.gsub(".","/")}.java',
-                            [Resgen::Gwt::Helper])
+                            [Resgen::Gwt::Helper],
+                            :guard => '!uibinder_file.gwt.cell?')
   template_set.erb_template([:gwt, :mvp],
                             :uibinder_file,
                             "#{File.dirname(__FILE__)}/templates/mvp_ui_component.java.erb",
                             'main/java/#{uibinder_file.gwt.qualified_mvp_ui_component_name.gsub(".","/")}.java',
-                            [Resgen::Gwt::Helper])
+                            [Resgen::Gwt::Helper],
+                            :guard => '!uibinder_file.gwt.cell?')
+  template_set.erb_template([:gwt],
+                            :uibinder_file,
+                            "#{File.dirname(__FILE__)}/templates/qualified_cell_renderer.java.erb",
+                            'main/java/#{uibinder_file.gwt.qualified_cell_renderer_name.gsub(".","/")}.java',
+                            [Resgen::Gwt::Helper],
+                            :guard => 'uibinder_file.gwt.cell?')
+
 end

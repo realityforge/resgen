@@ -1,0 +1,48 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(uibinder_file.gwt.qualified_cell_renderer_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public interface <%= uibinder_file.gwt.cell_renderer_name %>
+  extends com.google.gwt.uibinder.client.UiRenderer
+{
+  <%= uibinder_file.gwt.cell_renderer_name %> RENDERER = com.google.gwt.core.shared.GWT.create( <%= uibinder_file.gwt.cell_renderer_name %>.class );
+
+<% uibinder_file.styles.each do |style| -%>
+  public interface <%= Reality::Naming.pascal_case(style.name) %>
+    extends com.google.gwt.resources.client.CssResource
+  {
+<% style.css_classes.each do |key| -%>
+    String <%= key -%>();
+<% end -%>
+  }
+
+<% end -%>
+<%
+    parameters = uibinder_file.parameters.select do |parameter|
+      found = parameter.type.to_s.end_with?('Resources') || parameter.type.to_s.end_with?('ResourceBundle')
+      uibinder_file.asset_directory.catalog.repository.catalogs.each do |catalog|
+        catalog.asset_directories.each do |asset_directory|
+          if parameter.type.to_s == asset_directory.gwt.qualified_bundle_name.to_s
+            found = true
+            break
+          end
+        end
+      end unless found
+
+      !found
+    end
+-%>
+  void render( com.google.gwt.safehtml.shared.SafeHtmlBuilder builder<%= parameters.empty? ? '' : ', ' %><%= parameters.collect{|parameter| "#{parameter.type} #{parameter.name}"}.join(', ') -%> );
+<% uibinder_file.fields.each do |field| -%>
+
+  <%= field.type %> get<%= Reality::Naming.pascal_case(field.name) %>( com.google.gwt.dom.client.Element parent );
+<% end -%>
+<% uibinder_file.styles.each do |style| -%>
+
+  <%= style.type %> get<%= Reality::Naming.pascal_case(style.name) %>();
+<% end -%>
+<% if uibinder_file.gwt.event_handler? -%>
+
+  void onBrowserEvent( <%= uibinder_file.gwt.cell_context %> origin, com.google.gwt.dom.client.NativeEvent event, com.google.gwt.dom.client.Element parent<%= uibinder_file.gwt.event_handler_parameters.empty? ? '' : ', ' %><%= uibinder_file.gwt.event_handler_parameters.collect{|name, type| "#{type} #{Reality::Naming.camelize(name)}"}.join(', ') %> );
+<% end -%>
+}

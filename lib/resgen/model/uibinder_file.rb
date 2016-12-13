@@ -72,7 +72,11 @@ module Resgen #nodoc
       attr_accessor :css_classes
 
       def validate
-        expected_style = "#{uibinder_file.gwt.qualified_abstract_ui_component_name}.#{Reality::Naming.pascal_case(self.name)}"
+        container_type =
+          uibinder_file.gwt.cell? ?
+            uibinder_file.gwt.qualified_cell_renderer_name :
+            uibinder_file.gwt.qualified_abstract_ui_component_name
+        expected_style = "#{container_type}.#{Reality::Naming.pascal_case(self.name)}"
         raise "Uibinder style '#{self.name}' in uibinder file '#{uibinder_file.filename}' expected to have a type of '#{expected_style}'" if expected_style != self.type
       end
 

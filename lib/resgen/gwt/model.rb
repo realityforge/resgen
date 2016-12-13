@@ -32,6 +32,51 @@ Resgen::FacetManager.facet(:gwt) do |facet|
   end
 
   facet.enhance(Resgen::Model::UiBinderFile) do
+    attr_writer :cell
+
+    def cell?
+      @cell.nil? ? uibinder_file.name.end_with?('Cell') : !!@cell
+    end
+
+    def cell_context
+      Resgen.error("Attempted to invoke UiBinderFile.gwt.cell_context on '#{uibinder_file.name}' but file is not a cell.") unless cell?
+      @cell_context || "#{uibinder_file.asset_directory.name}.#{uibinder_file.name.to_s.gsub(/Cell$/,'')}"
+    end
+
+    def cell_context=(cell_context)
+      self.event_handler = true
+      @cell_context = cell_context
+    end
+
+    def event_handler=(event_handler)
+      self.cell = true
+      @event_handler = !!event_handler
+    end
+
+    def event_handler?
+      !!(@event_handler ||= false)
+    end
+
+    def event_handler_parameter(name, type)
+      self.event_handler = true
+      event_handler_parameters[name] = type
+    end
+
+    def event_handler_parameters
+      @event_handler_parameter ||= {}
+    end
+
+    attr_writer :cell_renderer_name
+
+    def cell_renderer_name
+      Resgen.error("Attempted to invoke UiBinderFile.gwt.cell_renderer_name on '#{uibinder_file.name}' but file is not a cell.") unless cell?
+      @cell_renderer_name || "#{uibinder_file.name}Renderer"
+    end
+
+    def qualified_cell_renderer_name
+      "#{uibinder_file.asset_directory.name}.#{cell_renderer_name}"
+    end
+
     attr_writer :abstract_ui_component_name
 
     def abstract_ui_component_name
