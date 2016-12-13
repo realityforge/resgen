@@ -142,7 +142,7 @@ module Resgen #nodoc
         field_map.clear
         style_map.clear
 
-        # begin
+        begin
           doc = Nokogiri::XML(contents) do |config|
             config.options = Nokogiri::XML::ParseOptions::STRICT | Nokogiri::XML::ParseOptions::NONET
           end
@@ -174,9 +174,9 @@ module Resgen #nodoc
             classname = element.namespace.nil? ? ELEMENT_NAME_MAP[element.name] : element.name
             field(field_attribute.value, "#{package_name}.#{classname}")
           end
-        # rescue => e
-        #   raise BadUiBinderFile.new(e)
-        # end
+        rescue => e
+          raise BadUiBinderFile.new(e)
+        end
       end
 
       ELEMENT_NAME_MAP =
