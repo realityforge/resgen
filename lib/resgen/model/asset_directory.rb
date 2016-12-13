@@ -123,7 +123,7 @@ module Resgen #nodoc
         css_files = {}
         stylesheet_filenames.each_pair do |name, filename|
           css_files[name] = @css_files[name].nil? ? CssFile.new(self, name, filename) : @css_files[name]
-          css_files[name].scan! if css_files[name].scan?
+          css_files[name].scan_if_required
         end
         uibinder_filenames.each_pair do |name, filename|
           uibinder_file =
