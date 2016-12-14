@@ -2,6 +2,7 @@
 package <%= to_package(uibinder_file.gwt.qualified_cell_renderer_name) %>;
 
 @javax.annotation.Generated( "Resgen" )
+@com.google.gwt.uibinder.client.UiTemplate( "<%= uibinder_file.name %>.ui.xml" )
 public interface <%= uibinder_file.gwt.cell_renderer_name %>
   extends com.google.gwt.uibinder.client.UiRenderer
 {
