@@ -46,6 +46,4 @@ module Resgen #nodoc
   end
 end
 
-Resgen::FacetManager.target_manager.targets.each do |target|
-  Resgen::Generator.target_manager.target(target.key, target.container_key, :access_method => target.access_method)
-end
+Reality::Facets.copy_targets_from_generator_target_manager(Resgen::Generator, Resgen::FacetManager)
