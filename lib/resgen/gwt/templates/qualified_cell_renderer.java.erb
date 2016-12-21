@@ -9,7 +9,7 @@ public interface <%= uibinder_file.gwt.cell_renderer_name %>
   <%= uibinder_file.gwt.cell_renderer_name %> RENDERER = com.google.gwt.core.shared.GWT.create( <%= uibinder_file.gwt.cell_renderer_name %>.class );
 
 <% uibinder_file.styles.each do |style| -%>
-  public interface <%= Reality::Naming.pascal_case(style.name) %>
+  interface <%= Reality::Naming.pascal_case(style.name) %>
     extends com.google.gwt.resources.client.CssResource
   {
 <% style.css_classes.each do |key| -%>
