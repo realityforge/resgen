@@ -79,10 +79,6 @@ module Resgen #nodoc
         catalog_map.values
       end
 
-      def read_file(filename)
-        IO.read(resolve_file(resolve_filename(filename)))
-      end
-
       def resolve_filename(filename)
         return filename unless self.filename
         filename =~ /^\// ? filename : File.expand_path("#{File.dirname(self.filename)}/#{filename}")
