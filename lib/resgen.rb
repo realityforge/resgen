@@ -19,8 +19,6 @@ require 'reality/core'
 require 'reality/facets'
 require 'reality/generators'
 
-require 'resgen/version'
-
 require 'resgen/core'
 
 require 'resgen/model/single_file_model'
