@@ -15,14 +15,11 @@
 module Resgen #nodoc
   module Model #nodoc
 
-    class SingleFileModel < Reality::BaseElement
-      def initialize(filename, options = {}, &block)
-        @filename = filename
-        Resgen::FacetManager.target_manager.apply_extension(self)
-        super(options, &block)
-      end
-
-      attr_reader :filename
+    # Module to be included for resources that are derived from a single file on the filesystem
+    # It is expected that the class including this module implements the methods
+    # * filename(): Should return the name of the filename to process.
+    # * process_file_contents(contents): Should handle parsing and interpreting file.
+    module SingleFileModel
       attr_reader :last_updated_at
 
       def scan_if_required
@@ -45,10 +42,6 @@ module Resgen #nodoc
         process_file_contents(contents)
 
         @last_updated_at = last_updated_at
-      end
-
-      def process_file_contents(contents)
-        raise 'process_file_contents(contents) not implemented'
       end
     end
   end

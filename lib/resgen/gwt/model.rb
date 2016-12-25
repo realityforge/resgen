@@ -31,7 +31,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     end
   end
 
-  facet.enhance(Resgen::Model::UiBinderFile) do
+  facet.enhance(Resgen::Model::UibinderFile) do
     attr_writer :cell
 
     def cell?
@@ -39,7 +39,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     end
 
     def cell_context
-      Resgen.error("Attempted to invoke UiBinderFile.gwt.cell_context on '#{uibinder_file.name}' but file is not a cell.") unless cell?
+      Resgen.error("Attempted to invoke UibinderFile.gwt.cell_context on '#{uibinder_file.name}' but file is not a cell.") unless cell?
       @cell_context || "#{uibinder_file.asset_directory.name}.#{uibinder_file.name.to_s.gsub(/Cell$/,'')}"
     end
 
@@ -69,7 +69,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     attr_writer :cell_renderer_name
 
     def cell_renderer_name
-      Resgen.error("Attempted to invoke UiBinderFile.gwt.cell_renderer_name on '#{uibinder_file.name}' but file is not a cell.") unless cell?
+      Resgen.error("Attempted to invoke UibinderFile.gwt.cell_renderer_name on '#{uibinder_file.name}' but file is not a cell.") unless cell?
       @cell_renderer_name || "#{uibinder_file.name}Renderer"
     end
 

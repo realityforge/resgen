@@ -14,61 +14,19 @@
 
 module Resgen #nodoc
   module Model #nodoc
-
-    class AssetDirectory < Reality::BaseElement
+    class AssetDirectory
       IMAGE_EXTENSIONS = %w(.png .gif .jpg .jpeg)
 
-      def initialize(catalog, name, options = {}, &block)
-        @name = name
-        @catalog = catalog
-        @filename = "#{catalog.path}/#{name.gsub('.', '/')}"
-        @css_files = {}
+      def pre_init
+        @path = "#{self.catalog.path}/#{self.name.gsub('.', '/')}"
         @image_files = {}
-        self.catalog.send(:register_asset_directory, self)
-        Resgen::FacetManager.target_manager.apply_extension(self)
-        Resgen.info "AssetDirectory '#{name}' definition started"
-        super(options, &block)
-        Resgen.info "AssetDirectory '#{name}' definition completed"
       end
 
-      attr_reader :catalog
-      attr_reader :name
-      attr_reader :filename
+      attr_reader :path
       attr_reader :last_updated_at
 
       def short_name
         self.name.gsub(/^.*\.([^.]+)$/, '\1')
-      end
-
-      def css_files
-        @css_files.values
-      end
-
-      def css_files?
-        !@css_files.empty?
-      end
-
-      def uibinder_file(name, options = {}, &block)
-        filename = "#{self.catalog.absolute_path}/#{self.name.gsub('.', '/')}/#{name}#{UiBinderFile::EXTENSION}"
-        UiBinderFile.new(self, name, filename, options, &block)
-      end
-
-      def uibinder_file_by_name?(name)
-        !!uibinder_file_map[name.to_s]
-      end
-
-      def uibinder_file_by_name(name)
-        uibinder_file = uibinder_file_map[name.to_s]
-        Resgen.error("Unable to locate uibinderfile named '#{name}'") unless uibinder_file
-        uibinder_file
-      end
-
-      def uibinder_files
-        uibinder_file_map.values
-      end
-
-      def uibinder_files?
-        !uibinder_file_map.empty?
       end
 
       def image_files
@@ -88,8 +46,8 @@ module Resgen #nodoc
       end
 
       def validate
-        Resgen.error("Asset directory #{self.filename} has been removed.") if removed?
-        Resgen.error("Asset directory #{self.filename} contains no resources.") if !css_files? && !image_files? && !uibinder_files?
+        Resgen.error("Asset directory #{self.path} has been removed.") if removed?
+        Resgen.error("Asset directory #{self.path} contains no resources.") if !css_files? && !image_files? && !uibinder_files?
 
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
@@ -98,34 +56,33 @@ module Resgen #nodoc
             end
           end
         end
-
       end
 
       def removed?
-        !File.exist?(self.filename)
+        !File.exist?(self.path)
       end
 
       def scan?
         return false if removed?
-        (@last_updated_at || 0) < File.mtime(self.filename).to_i
+        (@last_updated_at || 0) < File.mtime(self.path).to_i
       end
 
       def scan!
         image_files = {}
-        stylesheet_filenames = {}
-        uibinder_filenames = {}
+        stylesheet_names = []
+        uibinder_names = []
 
-        last_updated_at = File.mtime(self.filename).to_i
-        Dir["#{self.filename}/*"].sort.each do |f|
+        last_updated_at = File.mtime(self.path).to_i
+        Dir["#{self.path}/*"].sort.each do |f|
           f = f.to_s
           next if File.directory?(f)
           extension = File.extname(f)
           if IMAGE_EXTENSIONS.include?(extension)
             image_files[File.basename(f, extension)] = f
           elsif CssFile::EXTENSION == extension
-            stylesheet_filenames[File.basename(f, extension)] = f
-          elsif f.end_with?(UiBinderFile::EXTENSION)
-            uibinder_filenames[File.basename(f, UiBinderFile::EXTENSION)] = f
+            stylesheet_names << File.basename(f, extension)
+          elsif f.end_with?(UibinderFile::EXTENSION)
+            uibinder_names << File.basename(f, UibinderFile::EXTENSION)
           else
             next
           end
@@ -133,31 +90,17 @@ module Resgen #nodoc
           last_updated_at = modify_time if last_updated_at < modify_time
         end
 
-        css_files = {}
-        stylesheet_filenames.each_pair do |name, filename|
-          css_files[name] = @css_files[name].nil? ? CssFile.new(self, name, filename) : @css_files[name]
-          css_files[name].scan_if_required
+        stylesheet_names.each do |name|
+          css_file = css_file_by_name?(name) ? css_file_by_name(name) : css_file(name)
+          css_file.scan_if_required
         end
-        uibinder_filenames.each_pair do |name, filename|
-          uibinder_file =
-            uibinder_file_by_name?(name) ? uibinder_file_by_name(name) : UiBinderFile.new(self, name, filename)
+        uibinder_names.each do |name|
+          uibinder_file = uibinder_file_by_name?(name) ? uibinder_file_by_name(name) : uibinder_file(name)
           uibinder_file.scan_if_required
         end
 
         @last_updated_at = last_updated_at
         @image_files = image_files
-        @css_files = css_files
-      end
-
-      private
-
-      def uibinder_file_map
-        (@uibinder_file_map ||= {})
-      end
-
-      def register_uibinder_file(uibinder_file)
-        Resgen.error("Asset directory #{self.filename} attempting to register duplicate uibinder_file with name '#{uibinder_file.name}'.") if uibinder_file_map[name.to_s]
-        uibinder_file_map[uibinder_file.name.to_s] = uibinder_file
       end
     end
   end

@@ -15,22 +15,20 @@
 module Resgen #nodoc
   module Model #nodoc
 
-    class CssFile < SingleFileModel
+    class CssFile
       EXTENSION = '.css'
 
-      def initialize(asset_directory, name, filename, options = {}, &block)
-        @asset_directory = asset_directory
-        @name = name
+      include SingleFileModel
+
+      def pre_init
         @css_classes = []
         @data_resources = {}
-
-        Resgen.info "CssFile '#{name}' definition started"
-        super(filename, options, &block)
-        Resgen.info "CssFile '#{name}' definition completed"
       end
 
-      attr_reader :asset_directory
-      attr_reader :name
+      def filename
+        @filename ||= "#{self.asset_directory.path}/#{self.name}#{EXTENSION}"
+      end
+
       attr_reader :css_classes
       attr_reader :data_resources
 

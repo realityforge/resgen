@@ -18,7 +18,7 @@ module Resgen #nodoc
       path = File.expand_path(path)
       Proc.new do |artifact_type, artifact|
         catalog = catalog_for(artifact_type, artifact)
-        catalog.nil? || (catalog.absolute_path.start_with?(path) || path == catalog.absolute_path)
+        catalog.nil? || (catalog.path.start_with?(path) || path == catalog.path)
       end
     end
 
