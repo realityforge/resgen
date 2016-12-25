@@ -30,8 +30,6 @@ module Resgen #nodoc
 
     attr_accessor :current_filename
 
-    attr_accessor :current_repository
-
     private
 
     def register_repository(name, repository)
@@ -52,9 +50,7 @@ module Resgen #nodoc
         Resgen.send :register_repository, name, self
         Resgen::FacetManager.target_manager.apply_extension(self)
         Resgen.info 'Repository definition started'
-        Resgen.current_repository = self
         super(options, &block)
-        Resgen.current_repository = nil
         Resgen.info 'Repository definition completed'
       end
 
