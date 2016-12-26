@@ -36,12 +36,15 @@ module Resgen #nodoc
       end
 
       def scan!
-        contents = IO.read(self.filename)
         last_updated_at = File.mtime(self.filename).to_i
 
-        process_file_contents(contents)
+        process_file
 
         @last_updated_at = last_updated_at
+      end
+
+      def process_file
+        process_file_contents(IO.read(self.filename))
       end
     end
   end
