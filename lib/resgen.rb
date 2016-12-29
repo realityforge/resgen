@@ -30,15 +30,14 @@ require 'resgen/model/asset_directory'
 require 'resgen/model/catalog'
 require 'resgen/model/repository'
 
-require 'resgen/generators'
 require 'resgen/filters'
 
 require 'resgen/css_util'
 
 require 'resgen/rake_tasks'
 
-require 'resgen/gwt/model'
 require 'resgen/gwt/helper'
+require 'resgen/gwt/model'
 require 'resgen/gwt/generator'
 
 require 'resgen/mvp/model'

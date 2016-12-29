@@ -13,12 +13,34 @@
 #
 
 module Resgen #nodoc
+  module ArtifactDSL
+    include Reality::Generators::ArtifactDSL
+
+    def template_set_container
+      Resgen::Generator
+    end
+  end
+
   module FacetManager
     extend Reality::Facets::FacetContainer
   end
 
+  module Generator #nodoc
+    class << self
+      include Reality::Generators::TemplateSetContainer
+
+      def derive_default_helpers(options)
+        helpers = []
+        helpers << Resgen::Gwt::Helper if options[:file_type] == 'java'
+        helpers
+      end
+    end
+  end
+
   module Model #nodoc
   end
+
+  FacetManager.extension_manager.singleton_extension(ArtifactDSL)
 
   Reality::Model::Repository.new(:Resgen,
                                  Resgen::Model,
@@ -34,4 +56,6 @@ module Resgen #nodoc
     r.model_element(:uibinder_parameter, :uibinder_file, :access_method => :parameters, :inverse_access_method => :parameter, :custom_initialize => true)
     r.model_element(:uibinder_style, :uibinder_file, :access_method => :styles, :inverse_access_method => :style, :custom_initialize => true)
   end
+
+  Reality::Facets.copy_targets_to_generator_target_manager(Resgen::Generator, Resgen::FacetManager)
 end

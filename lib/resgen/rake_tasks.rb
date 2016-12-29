@@ -81,8 +81,8 @@ module Resgen #nodoc
       @target_dir = target_dir
       yield self if block_given?
       define
-      @templates = Resgen::Generator.generator.load_templates_from_template_sets(Resgen::Generator, generator_keys)
-      Resgen::Generator.generator.configure_buildr_project(buildr_project, task_name, @templates, target_dir)
+      @templates = Resgen::Generator.generator.load_templates_from_template_sets(generator_keys)
+      Reality::Generators::Buildr.configure_buildr_project(buildr_project, task_name, @templates, target_dir)
     end
 
     private
@@ -124,8 +124,7 @@ module Resgen #nodoc
                                         Reality::Generators::Logger,
                                         Reality::Facets::Logger) do
               Resgen.info "Generator started: Generating #{self.generator_keys.inspect}"
-              Resgen::Generator.generator.generate(Resgen::Generator,
-                                                   :repository,
+              Resgen::Generator.generator.generate(:repository,
                                                    repository,
                                                    self.target_dir,
                                                    @templates,
