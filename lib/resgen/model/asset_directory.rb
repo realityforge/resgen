@@ -97,6 +97,9 @@ module Resgen #nodoc
         uibinder_names.each do |name|
           uibinder_file = uibinder_file_by_name?(name) ? uibinder_file_by_name(name) : uibinder_file(name)
           uibinder_file.scan_if_required
+          uibinder_file.images.each do |image|
+            image_files.delete(File.basename(image.source, File.extname(image.source)))
+          end
         end
 
         @last_updated_at = last_updated_at
