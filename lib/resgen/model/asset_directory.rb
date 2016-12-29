@@ -100,6 +100,9 @@ module Resgen #nodoc
           uibinder_file.images.each do |image|
             image_files.delete(File.basename(image.source, File.extname(image.source)))
           end
+          uibinder_file.datas.each do |data|
+            image_files.delete(File.basename(data.source, File.extname(data.source)))
+          end
         end
 
         @last_updated_at = last_updated_at

@@ -27,6 +27,15 @@ module Resgen #nodoc
       attr_accessor :type
     end
 
+    class UibinderData
+      def initialize(uibinder_file, name, source, options = {}, &block)
+        @source = source
+        perform_init(uibinder_file, name, options, &block)
+      end
+
+      attr_accessor :source
+    end
+
     class UibinderImage
       def initialize(uibinder_file, name, source, options = {}, &block)
         @source = source
@@ -74,6 +83,10 @@ module Resgen #nodoc
         @filename ||= "#{self.asset_directory.path}/#{self.name}#{EXTENSION}"
       end
 
+      def data(name, source, options = {}, &block)
+        UibinderData.new(self, name, source, options, &block)
+      end
+
       def image(name, source, options = {}, &block)
         UibinderImage.new(self, name, source, options, &block)
       end
@@ -101,6 +114,7 @@ module Resgen #nodoc
         unhandled_styles = style_map.keys.dup
         unhandled_parameters = parameter_map.keys.dup
         unhandled_images = image_map.keys.dup
+        unhandled_datas = data_map.keys.dup
 
         begin
           doc = Nokogiri::XML(contents) do |config|
@@ -141,12 +155,20 @@ module Resgen #nodoc
             unhandled_styles.delete(name)
           end
 
+          doc.xpath('//ui:data[@field]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
+            name = element['field']
+            src = element['src']
+            if data_by_name?(name)
+              data_by_name(name).source = src
+            else
+              data(name, src)
+            end
+            unhandled_datas.delete(name)
+          end
+
           doc.xpath('//ui:image[@field]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
             name = element['field']
             src = element['src']
-            unless image_by_name?(name)
-              image(name, src)
-            end
             if image_by_name?(name)
               image_by_name(name).source = src
             else
@@ -175,6 +197,7 @@ module Resgen #nodoc
           Resgen.error("Uibinder file '#{self.name}' missing fields #{unhandled_fields.inspect} declared in repository definition.") unless unhandled_fields.empty?
           Resgen.error("Uibinder file '#{self.name}' missing styles #{unhandled_styles.inspect} declared in repository definition.") unless unhandled_styles.empty?
           Resgen.error("Uibinder file '#{self.name}' missing images #{unhandled_images.inspect} declared in repository definition.") unless unhandled_images.empty?
+          Resgen.error("Uibinder file '#{self.name}' missing datas #{unhandled_datas.inspect} declared in repository definition.") unless unhandled_datas.empty?
           Resgen.error("Uibinder file '#{self.name}' missing parameters #{unhandled_parameters.inspect} declared in repository definition.") unless unhandled_parameters.empty?
         rescue => e
           raise BadUibinderFile.new(e)

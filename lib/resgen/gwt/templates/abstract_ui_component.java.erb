@@ -46,6 +46,10 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
   @com.google.gwt.uibinder.client.UiField
   com.google.gwt.resources.client.ImageResource <%= image.name %>;
 <% end -%>
+<% uibinder_file.datas.each do |data| -%>
+  @com.google.gwt.uibinder.client.UiField
+  com.google.gwt.resources.client.DataResource <%= data.name %>;
+<% end -%>
 
   protected <%= uibinder_file.gwt.abstract_ui_component_name %>()
   {

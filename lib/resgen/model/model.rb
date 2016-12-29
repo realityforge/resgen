@@ -54,6 +54,7 @@ module Resgen #nodoc
     r.model_element(:uibinder_file, :asset_directory)
     r.model_element(:uibinder_field, :uibinder_file, :access_method => :fields, :inverse_access_method => :field, :custom_initialize => true)
     r.model_element(:uibinder_image, :uibinder_file, :access_method => :images, :inverse_access_method => :image, :custom_initialize => true)
+    r.model_element(:uibinder_data, :uibinder_file, :access_method => :datas, :inverse_access_method => :data, :custom_initialize => true)
     r.model_element(:uibinder_parameter, :uibinder_file, :access_method => :parameters, :inverse_access_method => :parameter, :custom_initialize => true)
     r.model_element(:uibinder_style, :uibinder_file, :access_method => :styles, :inverse_access_method => :style, :custom_initialize => true)
   end
