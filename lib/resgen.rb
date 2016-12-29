@@ -38,6 +38,5 @@ require 'resgen/rake_tasks'
 
 require 'resgen/gwt/helper'
 require 'resgen/gwt/model'
-require 'resgen/gwt/generator'
 
 require 'resgen/mvp/model'

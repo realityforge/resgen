@@ -29,6 +29,10 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     def with_lookup?
       !!(@with_lookup ||= false)
     end
+
+    java_artifact(:client_bundle,
+                  :bundle,
+                  :guard => 'asset_directory.css_files? || asset_directory.image_files?')
   end
 
   facet.enhance(Resgen::Model::UibinderFile) do
@@ -100,5 +104,16 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     def qualified_mvp_ui_component_name
       "#{uibinder_file.asset_directory.name}.#{mvp_ui_component_name}"
     end
+
+    java_artifact(:abstract_uibinder_component,
+                  :abstract_ui_component,
+                  :guard => '!uibinder_file.gwt.cell?')
+    java_artifact(:abstract_uibinder_component,
+                  :mvp_ui_component,
+                  :facets => [:mvp],
+                  :guard => '!uibinder_file.gwt.cell?')
+    java_artifact(:abstract_uibinder_component,
+                  :cell_renderer,
+                  :guard => 'uibinder_file.gwt.cell?')
   end
 end
