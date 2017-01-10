@@ -145,7 +145,8 @@ module Resgen #nodoc
             Resgen.error("Uibinder file '#{self.name}' explicitly names style field 'style' which matches default value for field.") if specified_name == 'style'
             name = specified_name || 'style'
             type = element['type']
-            css_fragment = Resgen::CssUtil.parse_css(self.filename, element.text)
+            gss = (element['gss'] || 'false').downcase == 'true'
+            css_fragment = Resgen::CssUtil.parse_css(self.filename, element.text, gss ? :gss : :css)
             css_classes = css_fragment.css_classes
             if style_by_name?(name)
               style = style_by_name(name)

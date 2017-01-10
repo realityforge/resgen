@@ -17,23 +17,32 @@ module Resgen #nodoc
 
     class CssFile
       EXTENSION = '.css'
+      GSS_EXTENSION = '.gss'
 
       include SingleFileModel
 
       def pre_init
         @css_classes = []
         @data_resources = {}
+        @type = :css
       end
 
       def filename
-        @filename ||= "#{self.asset_directory.path}/#{self.name}#{EXTENSION}"
+        @filename ||= "#{self.asset_directory.path}/#{self.name}.#{self.type}"
+      end
+
+      attr_reader :type
+
+      def type=(type)
+        Resgen.error("Bad type '#{type}' for CssFile #{self.filename} ") unless [:gss, :css].include?(type)
+        @type = type
       end
 
       attr_reader :css_classes
       attr_reader :data_resources
 
       def process_file_contents(css_file_contents)
-        css_fragment = Resgen::CssUtil.parse_css(self.filename, css_file_contents)
+        css_fragment = Resgen::CssUtil.parse_css(self.filename, css_file_contents, self.type)
         @css_classes = css_fragment.css_classes
         @data_resources = css_fragment.data_resources
       end

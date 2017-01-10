@@ -31,7 +31,7 @@ module Resgen #nodoc
         attr_accessor :data_resources
       end
 
-      def parse_css(filename, css_file_contents)
+      def parse_css(filename, css_file_contents, type)
         css_classes = []
         data_resources = []
 
@@ -57,10 +57,18 @@ module Resgen #nodoc
 
         root.children.each do |child|
           next unless child.is_a?(Sass::Tree::DirectiveNode)
-          next unless child.name == '@url' && child.value.size > 1
-          params = child.value[1].split(' ')
-          resource_key = params[1]
-          data_resources << resource_key
+          if :css == type
+            next unless child.name == '@url' && child.value.size > 1
+            params = child.value[1].split(' ')
+            resource_key = params[1]
+            data_resources << resource_key
+          elsif :gss == type
+            next unless child.name == '@def' && child.value.size > 1
+            params = child.value[1].split(' ')
+            resource_key = params[1]
+            next unless resource_key =~ /^resourceUrl\("(.*)"\)$/
+            data_resources << $1
+          end
         end
 
         CssFragment.new(filename,

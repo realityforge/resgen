@@ -70,6 +70,7 @@ module Resgen #nodoc
       def scan!
         image_files = {}
         stylesheet_names = []
+        gss_stylesheet_names = []
         uibinder_names = []
 
         last_updated_at = File.mtime(self.path).to_i
@@ -81,6 +82,8 @@ module Resgen #nodoc
             image_files[File.basename(f, extension)] = f
           elsif CssFile::EXTENSION == extension
             stylesheet_names << File.basename(f, extension)
+          elsif CssFile::GSS_EXTENSION == extension
+            gss_stylesheet_names << File.basename(f, extension)
           elsif f.end_with?(UibinderFile::EXTENSION)
             uibinder_names << File.basename(f, UibinderFile::EXTENSION)
           else
@@ -92,6 +95,12 @@ module Resgen #nodoc
 
         stylesheet_names.each do |name|
           css_file = css_file_by_name?(name) ? css_file_by_name(name) : css_file(name)
+          css_file.type = :css
+          css_file.scan_if_required
+        end
+        gss_stylesheet_names.each do |name|
+          css_file = css_file_by_name?(name) ? css_file_by_name(name) : css_file(name)
+          css_file.type = :gss
           css_file.scan_if_required
         end
         uibinder_names.each do |name|
