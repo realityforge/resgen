@@ -141,7 +141,9 @@ module Resgen #nodoc
           end
 
           doc.xpath('//ui:style[@type]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
-            name = element['field'] || 'style'
+            specified_name = element['field']
+            Resgen.error("Uibinder file '#{self.name}' explicitly names style field 'style' which matches default value for field.") if specified_name == 'style'
+            name = specified_name || 'style'
             type = element['type']
             css_fragment = Resgen::CssUtil.parse_css(self.filename, element.text)
             css_classes = css_fragment.css_classes
