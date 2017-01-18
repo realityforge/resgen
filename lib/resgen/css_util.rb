@@ -49,7 +49,7 @@ module Resgen #nodoc
 
               # e can be a separate classifier chain ala input.a.b
               e.to_s.split('.')[1...100000].each do |classname|
-                css_classes << classname
+                css_classes << classname.gsub(/\:.*$/,'')
               end
             end
           end
