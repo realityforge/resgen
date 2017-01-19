@@ -184,7 +184,7 @@ module Resgen #nodoc
             element = field_attribute.parent
 
             package_name = element.namespace.nil? ? 'com.google.gwt.dom.client' : package_prefixes[element.namespace.prefix]
-            classname = element.namespace.nil? ? ELEMENT_NAME_MAP[element.name] : element.name
+            classname = element.namespace.nil? ? (ELEMENT_NAME_MAP[element.name] || 'Element') : element.name
 
             name = field_attribute.value
             type = "#{package_name}.#{classname}"
