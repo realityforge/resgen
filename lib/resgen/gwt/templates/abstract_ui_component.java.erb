@@ -16,7 +16,8 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
     extends com.google.gwt.resources.client.CssResource
   {
 <% style.css_classes.each do |key| -%>
-    String <%= key -%>();
+    @ClassName( "<%= key -%>" )
+    String <%= Reality::Naming.camelize(key) -%>();
 <% end -%>
   }
 

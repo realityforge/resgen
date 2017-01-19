@@ -12,7 +12,8 @@ public interface <%= asset_directory.gwt.bundle_name %>
     extends com.google.gwt.resources.client.CssResource
   {
 <% css_file.css_classes.each do |key| -%>
-    String <%= key -%>();
+    @ClassName( "<%= key -%>" )
+    String <%= Reality::Naming.camelize(key) -%>();
 <% end -%>
   }
 <% end -%>
