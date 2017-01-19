@@ -8,6 +8,12 @@ public interface <%= uibinder_file.gwt.cell_renderer_name %>
 {
   <%= uibinder_file.gwt.cell_renderer_name %> RENDERER = com.google.gwt.core.shared.GWT.create( <%= uibinder_file.gwt.cell_renderer_name %>.class );
 
+<% uibinder_file.fields.each do |field| -%>
+  String <%= Reality::Naming.uppercase_constantize(field.name.gsub(/^\_/,'')) %> = "<%= field.name %>";
+<% end -%>
+<% unless uibinder_file.fields.empty? -%>
+
+<% end -%>
 <% uibinder_file.styles.each do |style| -%>
   interface <%= Reality::Naming.pascal_case(style.name) %>
     extends com.google.gwt.resources.client.CssResource
