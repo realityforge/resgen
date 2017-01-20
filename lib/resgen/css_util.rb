@@ -42,29 +42,7 @@ module Resgen #nodoc
         end
 
         root.children.each do |child|
-          next unless child.is_a?(Sass::Tree::RuleNode)
-          # Each rule can have a separate comma separate clause
-          child.parsed_rules.members.each do |clause|
-            clause.members.each do |e|
-              parse_candidate(css_classes, e)
-            end
-          end
-        end
-
-        root.children.each do |child|
-          next unless child.is_a?(Sass::Tree::DirectiveNode)
-          if :css == type
-            next unless child.name == '@url' && child.value.size > 1
-            params = child.value[1].split(' ')
-            resource_key = params[1]
-            data_resources << resource_key
-          elsif :gss == type
-            next unless child.name == '@def' && child.value.size > 1
-            params = child.value[1].split(' ')
-            resource_key = params[1]
-            next unless resource_key =~ /^resourceUrl\("(.*)"\)$/
-            data_resources << $1
-          end
+          process_node(child, type, css_classes, data_resources)
         end
 
         CssFragment.new(filename,
@@ -73,6 +51,36 @@ module Resgen #nodoc
       end
 
       private
+
+      def process_node(child, type, css_classes, data_resources)
+        if child.is_a?(Sass::Tree::RuleNode)
+          # Each rule can have a separate comma separate clause
+          child.parsed_rules.members.each do |clause|
+            clause.members.each do |e|
+              parse_candidate(css_classes, e)
+            end
+          end
+        elsif child.is_a?(Sass::Tree::DirectiveNode)
+          if child.name == '@media'
+            child.children.each do |node|
+              process_node(node, type, css_classes, data_resources)
+            end
+          end
+          if :css == type
+            if child.name == '@url' && child.value.size > 1
+              params = child.value[1].split(' ')
+              resource_key = params[1]
+              data_resources << resource_key
+            end
+          elsif :gss == type
+            if child.name == '@def' && child.value.size > 1
+              params = child.value[1].split(' ')
+              resource_key = params[1]
+              data_resources << $1 if resource_key =~ /^resourceUrl\("(.*)"\)$/
+            end
+          end
+        end
+      end
 
       def parse_candidate(css_classes, candidate)
         if candidate.is_a?(Sass::Selector::SimpleSequence) || candidate.is_a?(Sass::Selector::Sequence)
