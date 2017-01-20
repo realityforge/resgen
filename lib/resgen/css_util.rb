@@ -46,11 +46,7 @@ module Resgen #nodoc
           # Each rule can have a separate comma separate clause
           child.parsed_rules.members.each do |clause|
             clause.members.each do |e|
-
-              # e can be a separate classifier chain ala input.a.b
-              e.to_s.split('.')[1...100000].each do |classname|
-                css_classes << classname.gsub(/\:.*$/,'')
-              end
+              parse_candidate(css_classes, e)
             end
           end
         end
@@ -74,6 +70,34 @@ module Resgen #nodoc
         CssFragment.new(filename,
                         :css_classes => css_classes.sort.uniq,
                         :data_resources => data_resources.sort.uniq)
+      end
+
+      private
+
+      def parse_candidate(css_classes, candidate)
+        if candidate.is_a?(Sass::Selector::SimpleSequence) || candidate.is_a?(Sass::Selector::Sequence)
+          candidate.members.each do |m|
+            parse_candidate(css_classes, m)
+          end
+        elsif candidate.is_a?(Sass::Selector::Class)
+          css_classes << candidate.name
+        elsif candidate.is_a?(Sass::Selector::Pseudo)
+          if candidate.name == 'not' && candidate.arg
+            candidate.arg.each do |a|
+              parse_candidate(css_classes, a)
+            end
+          end
+        elsif candidate.is_a?(Sass::Selector::Attribute)
+          # Skipped
+        elsif candidate.is_a?(Sass::Selector::Universal)
+          # Skipped
+        elsif candidate.is_a?(Sass::Selector::Element)
+          # Skipped
+        elsif candidate.is_a?(String)
+          # Skipped
+        else
+          Resgen.error("Unhandled css element of type #{candidate.class.name} and value '#{candidate}'")
+        end
       end
     end
   end
