@@ -107,6 +107,9 @@ module Resgen #nodoc
 
       def validate
         Resgen.error("Uibinder file '#{self.name}' present but gwt facet not enabled") unless facet_enabled?(:gwt)
+        fields.each do |f|
+          Resgen.error("Field '#{f.name}' in Uibinder file '#{self.name}' is a cell but has a field name that is not compatible with cells. Should start with a letter.") unless f.name.to_s =~ /^[A-Za-z]/
+        end if gwt.cell?
       end
 
       def process_file_contents(contents)
