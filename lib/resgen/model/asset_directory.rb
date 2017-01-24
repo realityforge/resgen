@@ -52,7 +52,7 @@ module Resgen #nodoc
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
             unless image_file_by_key?(data_resource) || image_file_by_key?(Reality::Naming.underscore(data_resource))
-              Resgen.error("Css file #{css_file.filename} contains a data resource '#{data_resource}' that does not align with an image resource named '#{data_resource}' nor '#{Reality::Naming.underscore(data_resource)}' in asset directory '#{self.filename}'.")
+              Resgen.error("Css file #{css_file.filename} contains a data resource '#{data_resource}' that does not align with an image resource named '#{data_resource}' nor '#{Reality::Naming.underscore(data_resource)}' in asset directory '#{self.path}'.")
             end
           end
         end
