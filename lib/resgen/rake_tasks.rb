@@ -47,7 +47,7 @@ module Resgen #nodoc
         :resgen
       end
 
-      def generator_container
+      def template_set_container
         Resgen::Generator
       end
 
