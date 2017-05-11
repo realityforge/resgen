@@ -15,12 +15,11 @@
 require 'sass/css'
 require 'nokogiri'
 
+require 'reality/mda'
 require 'reality/core'
 require 'reality/facets'
 require 'reality/generators'
 require 'reality/model'
-
-require 'resgen/core'
 
 require 'resgen/model/model'
 require 'resgen/model/single_file_model'
@@ -33,8 +32,6 @@ require 'resgen/model/repository'
 require 'resgen/filters'
 
 require 'resgen/css_util'
-
-require 'resgen/rake_tasks'
 
 require 'resgen/gwt/helper'
 require 'resgen/gwt/model'

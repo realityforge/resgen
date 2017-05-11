@@ -13,40 +13,7 @@
 #
 
 module Resgen #nodoc
-  module ArtifactDSL
-    include Reality::Generators::ArtifactDSL
-
-    def template_set_container
-      Resgen::Generator
-    end
-  end
-
-  module FacetManager
-    extend Reality::Facets::FacetContainer
-  end
-
-  module Generator #nodoc
-    class << self
-      include Reality::Generators::TemplateSetContainer
-
-      def derive_default_helpers(options)
-        helpers = []
-        helpers << Resgen::Gwt::Helper if options[:file_type] == 'java'
-        helpers
-      end
-    end
-  end
-
-  module Model #nodoc
-  end
-
-  FacetManager.extension_manager.singleton_extension(ArtifactDSL)
-
-  Reality::Model::Repository.new(:Resgen,
-                                 Resgen::Model,
-                                 :instance_container => Resgen,
-                                 :facet_container => Resgen::FacetManager,
-                                 :log_container => Resgen) do |r|
+  Reality::Mda.define_system(Resgen, :default_descriptor_name => 'resources.rb') do |r|
     r.model_element(:repository)
     r.model_element(:catalog, :repository, :custom_initialize => true)
     r.model_element(:asset_directory, :catalog)
@@ -59,5 +26,13 @@ module Resgen #nodoc
     r.model_element(:uibinder_style, :uibinder_file, :access_method => :styles, :inverse_access_method => :style, :custom_initialize => true)
   end
 
-  Reality::Facets.copy_targets_to_generator_target_manager(Resgen::Generator, Resgen::FacetManager)
+  module TemplateSetManager #nodoc
+    class << self
+      def derive_default_helpers(options)
+        helpers = []
+        helpers << Resgen::Gwt::Helper if options[:file_type] == 'java'
+        helpers
+      end
+    end
+  end
 end
