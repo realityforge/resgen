@@ -87,4 +87,17 @@ CSS
     assert_equal %w(c1 c2 c3 c4 c5 c6), results.css_classes
     assert_equal [], results.data_resources
   end
+
+  def test_parse_gss_parse
+    filename = 'myfilename.gss'
+    css_contents = <<CSS
+H1 .c5, SPAN a.c2, H.c3 span { cursor: pointer; }
+DIV H.c6 > .c1.c4 td .c7 .c2 > .c8 TH { cursor: pointer; }
+CSS
+    results = Resgen::CssUtil.parse_css(filename, css_contents, :gss)
+
+    assert_equal filename, results.filename
+    assert_equal %w(c1 c2 c3 c4 c5 c6 c7 c8), results.css_classes
+    assert_equal [], results.data_resources
+  end
 end
