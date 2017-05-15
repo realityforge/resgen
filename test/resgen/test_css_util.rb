@@ -88,11 +88,26 @@ CSS
     assert_equal [], results.data_resources
   end
 
+  def test_parse_traverses_media_clauses
+    filename = 'myfilename.css'
+    css_contents = <<CSS
+.c5 { cursor: pointer; }
+@media (min-width: 992px) and (max-width: 1199px) { .c2.c4 { cursor: pointer; } }
+.c3 .c1 span { cursor: pointer; }
+@media (max-width: 100px) { .c6 > .c1 > .c1 { cursor: pointer; } }
+CSS
+    results = Resgen::CssUtil.parse_css(filename, css_contents, :css)
+
+    assert_equal filename, results.filename
+    assert_equal %w(c1 c2 c3 c4 c5 c6), results.css_classes
+    assert_equal [], results.data_resources
+  end
+
   def test_parse_gss_parse
     filename = 'myfilename.gss'
     css_contents = <<CSS
 H1 .c5, SPAN a.c2, H.c3 span { cursor: pointer; }
-DIV H.c6 > .c1.c4 td .c7 .c2 > .c8 TH { cursor: pointer; }
+@media (min-width: 992px) and (max-width: 1199px) {DIV H.c6 > .c1.c4 td .c7 .c2 > .c8 TH { cursor: pointer; } }
 CSS
     results = Resgen::CssUtil.parse_css(filename, css_contents, :gss)
 
