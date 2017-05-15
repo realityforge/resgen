@@ -103,7 +103,7 @@ CSS
     assert_equal [], results.data_resources
   end
 
-  def test_parse_gss_parse
+  def test_parse_gss
     filename = 'myfilename.gss'
     css_contents = <<CSS
 H1 .c5, SPAN a.c2, H.c3 span { cursor: pointer; }
