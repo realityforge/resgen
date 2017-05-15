@@ -115,4 +115,37 @@ CSS
     assert_equal %w(c1 c2 c3 c4 c5 c6 c7 c8), results.css_classes
     assert_equal [], results.data_resources
   end
+
+  def test_parse_gss_extracts_data_resources
+    filename = 'myfilename.gss'
+    css_contents = <<CSS
+@def DROP_DOWN_ARROW_URL resourceUrl("drop_down_arrow");
+@def SELECTION_BORDER_WIDTH 2px;
+@def Other_URL resourceUrl("ace_arrow");
+
+.c1 { cursor: pointer; }
+CSS
+    results = Resgen::CssUtil.parse_css(filename, css_contents, :gss)
+
+    assert_equal filename, results.filename
+    assert_equal %w(c1), results.css_classes
+    assert_equal %w(ace_arrow drop_down_arrow), results.data_resources
+  end
+
+  def test_parse_css_extracts_data_resources
+    filename = 'myfilename.css'
+    css_contents = <<CSS
+@url myCursorUrl fancyCursorResource;
+@def SPRITE_WIDTH value('imageResource.getWidth', 'px')
+@def myIdent 10px;
+@url Other_URL ace_arrow;
+
+.c1 { cursor: pointer; }
+CSS
+    results = Resgen::CssUtil.parse_css(filename, css_contents, :css)
+
+    assert_equal filename, results.filename
+    assert_equal %w(c1), results.css_classes
+    assert_equal %w(ace_arrow fancyCursorResource), results.data_resources
+  end
 end
