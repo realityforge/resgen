@@ -36,7 +36,6 @@ module Resgen #nodoc
     end
     class LoadDescriptor
       def pre_load
-        # Figure out how to push this back to mda so all elements generated from files have resolve methods
         Resgen.current_filename = self.filename
       end
 
