@@ -148,4 +148,14 @@ CSS
     assert_equal %w(c1), results.css_classes
     assert_equal %w(ace_arrow fancyCursorResource), results.data_resources
   end
+
+  def test_fail_to_parse_bad_css
+    filename = 'myfilename.css'
+    css_contents = <<CSS
+%.c1 { cursor: pointer; }
+CSS
+    assert_raise Resgen::CssUtil::BadCssFile.new('Unable to parse CSS file myfilename.css') do
+      Resgen::CssUtil.parse_css(filename, css_contents, :css)
+    end
+  end
 end
