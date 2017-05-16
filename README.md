@@ -9,4 +9,3 @@ Visit the [Resgen site](http://realityforge.org/resgen/) for further details.
 ## TODO
 
 * Add tests for the model objects.
-* Try and figure out how to write tests for generators.
