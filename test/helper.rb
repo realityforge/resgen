@@ -47,17 +47,17 @@ class Resgen::TestCase < Minitest::Test
   end
 
   # The base test directory
-  def base_test_dir
-    @base_test_dir ||= File.expand_path("#{File.dirname(__FILE__)}")
+  def self.base_test_dir
+    File.expand_path("#{File.dirname(__FILE__)}")
   end
 
   # The fixtures directory
-  def fixture_dir
+  def self.fixture_dir
     "#{base_test_dir}/fixtures"
   end
 
   def fixture(fixture_name)
-    "#{fixture_dir}/#{fixture_name}"
+    "#{self.class.fixture_dir}/#{fixture_name}"
   end
 
   def assert_fixture_matches_output(fixture_name, output_filename)
@@ -66,6 +66,9 @@ class Resgen::TestCase < Minitest::Test
   end
 
   def run_generators(template_set_keys, repository, options = {})
+    repository.send(:extension_point, :scan_if_required)
+    repository.send(:extension_point, :validate)
+
     target_dir = options[:target_dir] || local_dir(::SecureRandom.hex)
     filter = options[:filter]
     Resgen::TemplateSetManager.generator.generate(:repository, repository, target_dir, template_set_keys, filter)
