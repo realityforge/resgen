@@ -81,7 +81,7 @@ class Resgen::TestCase < Minitest::Test
   end
 
   def assert_no_diff(path1, path2)
-    run_command("diff -U 3 #{path1} #{path2}")
+    run_command("diff -r -U 3 #{path1} #{path2}")
   end
 
   def run_command(command)
