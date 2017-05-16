@@ -1,0 +1,8 @@
+@def DROP_DOWN_ARROW_URL resourceUrl("drop_down_arrow");
+
+.combo {
+  background-image: DROP_DOWN_ARROW_URL;
+  background-repeat: no-repeat;
+  background-position: 95% center;
+  color: #000;
+}
