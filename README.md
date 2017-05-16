@@ -8,6 +8,5 @@ Visit the [Resgen site](http://realityforge.org/resgen/) for further details.
 
 ## TODO
 
-* Abstract the rake task definitions into reality-generators somehow.
 * Add tests for the model objects.
 * Try and figure out how to write tests for generators.
