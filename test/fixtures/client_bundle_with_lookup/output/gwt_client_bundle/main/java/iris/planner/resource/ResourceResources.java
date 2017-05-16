@@ -2,10 +2,10 @@
 package iris.planner.resource;
 
 @javax.annotation.Generated( "Resgen" )
-public interface PlannerResourceBundle
-  extends com.google.gwt.resources.client.ClientBundle
+public interface ResourceResources
+  extends com.google.gwt.resources.client.ClientBundleWithLookup
 {
-  ResourceResources INSTANCE = com.google.gwt.core.shared.GWT.create( PlannerResourceBundle.class );
+  ResourceResources INSTANCE = com.google.gwt.core.shared.GWT.create( ResourceResources.class );
 
   interface Style
     extends com.google.gwt.resources.client.CssResource
