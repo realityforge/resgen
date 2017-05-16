@@ -76,6 +76,18 @@ CSS
     assert_equal [], results.data_resources
   end
 
+  def test_parse_css_with_attribute_selectors
+    filename = 'myfilename.css'
+    css_contents = <<CSS
+input[type="radio"].c1 { cursor: pointer; }
+CSS
+    results = Resgen::CssUtil.parse_css(filename, css_contents, :css)
+
+    assert_equal filename, results.filename
+    assert_equal %w(c1), results.css_classes
+    assert_equal [], results.data_resources
+  end
+
   def test_parse_css_sorts_classes
     filename = 'myfilename.css'
     css_contents = <<CSS
