@@ -95,22 +95,8 @@ Resgen::FacetManager.facet(:gwt) do |facet|
       qualified_abstract_ui_component_name.gsub(/(.*)\.Abstract#{uibinder_file.mvp? ? 'Simple' : ''}([^.]+)$/, '\1.\2')
     end
 
-    attr_writer :mvp_ui_component_name
-
-    def mvp_ui_component_name
-      @mvp_ui_component_name || "Abstract#{uibinder_file.name}"
-    end
-
-    def qualified_mvp_ui_component_name
-      "#{uibinder_file.asset_directory.name}.#{mvp_ui_component_name}"
-    end
-
     java_artifact(:abstract_uibinder_component,
                   :abstract_ui_component,
-                  :guard => '!uibinder_file.gwt.cell?')
-    java_artifact(:abstract_uibinder_component,
-                  :mvp_ui_component,
-                  :facets => [:mvp],
                   :guard => '!uibinder_file.gwt.cell?')
     java_artifact(:abstract_uibinder_component,
                   :cell_renderer,

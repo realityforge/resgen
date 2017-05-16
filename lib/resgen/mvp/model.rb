@@ -12,4 +12,21 @@
 # limitations under the License.
 #
 
-Resgen::FacetManager.facet(:mvp => [:gwt])
+Resgen::FacetManager.facet(:mvp => [:gwt]) do |facet|
+  facet.enhance(Resgen::Model::UibinderFile) do
+    attr_writer :abstract_ui_component_name
+
+    def abstract_ui_component_name
+      @abstract_ui_component_name || "Abstract#{uibinder_file.name}"
+    end
+
+    def qualified_abstract_ui_component_name
+      "#{uibinder_file.asset_directory.name}.#{abstract_ui_component_name}"
+    end
+
+    java_artifact(:abstract_uibinder_component,
+                  :abstract_ui_component,
+                  :guard => '!uibinder_file.gwt.cell?')
+  end
+end
+
