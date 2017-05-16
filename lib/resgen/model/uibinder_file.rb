@@ -77,6 +77,10 @@ module Resgen #nodoc
     class UibinderFile
       EXTENSION = '.ui.xml'
 
+      def pre_init
+        @last_updated_at = 0
+      end
+
       include SingleFileModel
 
       def filename

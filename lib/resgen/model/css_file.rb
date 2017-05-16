@@ -25,6 +25,7 @@ module Resgen #nodoc
         @css_classes = []
         @data_resources = {}
         @type = :css
+        @last_updated_at = 0
       end
 
       def filename

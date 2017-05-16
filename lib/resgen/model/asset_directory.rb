@@ -20,6 +20,7 @@ module Resgen #nodoc
       def pre_init
         @path = "#{self.catalog.path}/#{self.name.gsub('.', '/')}"
         @image_files = {}
+        @last_updated_at = 0
       end
 
       attr_reader :path
@@ -64,7 +65,7 @@ module Resgen #nodoc
 
       def scan?
         return false if removed?
-        (@last_updated_at || 0) < File.mtime(self.path).to_i
+        @last_updated_at < File.mtime(self.path).to_i
       end
 
       def scan!

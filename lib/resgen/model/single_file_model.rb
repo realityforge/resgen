@@ -32,7 +32,7 @@ module Resgen #nodoc
 
       def scan?
         return false if removed?
-        (@last_updated_at || 0) < File.mtime(self.filename).to_i
+        @last_updated_at < File.mtime(self.filename).to_i
       end
 
       def scan!
