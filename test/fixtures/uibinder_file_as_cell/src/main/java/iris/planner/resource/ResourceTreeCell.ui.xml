@@ -1,0 +1,42 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+  <ui:with field="displayString" type="java.lang.String"/>
+  <ui:with field="textCss" type="java.lang.String"/>
+  <ui:with field="cellCss" type="java.lang.String"/>
+  <ui:with field="iconStr" type="com.google.gwt.safehtml.shared.SafeHtml"/>
+  <ui:with field="bundle" type="iris.planner.client.resource.PlannerResourceBundle"/>
+  <ui:with field="tree_cell" type="iris.gidgets.client.view.ui.tree_cell.TreeCellResources"/>
+
+  <ui:style type="iris.planner.resource.ResourceTreeCellRenderer.Style">
+    .icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 15px;
+      height: 15px;
+    }
+
+    .duty .icon {
+      background-color: #c0ffc0;
+    }
+
+    .rest .icon {
+      background-color: #eee8aa;
+    }
+
+    .travel .icon {
+      background-color: #add8e6;
+    }
+  </ui:style>
+  <div>
+    <div class="{tree_cell.style.cell} {cellCss}">
+      <div class="{tree_cell.style.icons}">
+        <ui:safehtml from="{iconStr}"/>
+      </div>
+      <div class="{tree_cell.style.text} {textCss}">
+        <ui:text from="{displayString}"/>
+      </div>
+      <div class="{style.icon}">
+      </div>
+    </div>
+  </div>
+</ui:UiBinder>

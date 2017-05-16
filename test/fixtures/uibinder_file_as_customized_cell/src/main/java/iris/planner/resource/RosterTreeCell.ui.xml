@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+  <ui:with field="checkboxStr" type="com.google.gwt.safehtml.shared.SafeHtml"/>
+  <ui:with field="displayString" type="java.lang.String"/>
+  <ui:with field="tooltip" type="java.lang.String"/>
+  <ui:with field="iconStr" type="com.google.gwt.safehtml.shared.SafeHtml"/>
+  <ui:style type="iris.planner.resource.RosterTreeCellRenderer.Style">
+    .rosterCell div {
+      float: left;
+    }
+
+    .rosterCell .icons {
+      margin-right: 5px;
+    }
+  </ui:style>
+  <div ui:field="cell" title="{tooltip}">
+    <div class="{style.rosterCell}">
+      <div ui:field="checkboxField" style="margin-top:1px">
+        <ui:safehtml from="{checkboxStr}"/>
+      </div>
+      <div class="{style.icons}">
+        <ui:safehtml from="{iconStr}"/>
+      </div>
+      <div style="margin-top:3px">
+        <ui:text from="{displayString}"/>
+      </div>
+    </div>
+    <div style="clear:both"/>
+  </div>
+</ui:UiBinder>

@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  font-family: arial,tahoma,helvetica,sans-serif;
+}
+
+input[type="text"],
+select {
+  border: 1px solid #d3d3d3;
+}
+
+.incomplete,
+.incomplete span,
+.incomplete.requirementNotMet,
+.incomplete.requirementNotMet span {
+  color: #f00;
+}
