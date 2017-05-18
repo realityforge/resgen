@@ -25,9 +25,6 @@ class Resgen::TestCase < Minitest::Test
   end
 
   def run_generators(template_set_keys, repository, options = {})
-    repository.send(:extension_point, :scan_if_required)
-    repository.send(:extension_point, :validate)
-
     target_dir = options[:target_dir] || local_dir(::SecureRandom.hex)
     filter = options[:filter]
     Resgen::TemplateSetManager.generator.generate(:repository, repository, target_dir, template_set_keys, filter)

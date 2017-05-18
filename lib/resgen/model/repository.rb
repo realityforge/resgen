@@ -25,6 +25,11 @@ module Resgen #nodoc
 
       attr_reader :filename
 
+      def pre_generate
+        extension_point(:scan_if_required)
+        extension_point(:validate)
+      end
+
       def catalog(name, path, options = {}, &block)
         Catalog.new(self, name, path, options, &block)
       end
