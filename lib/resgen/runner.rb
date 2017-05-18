@@ -16,7 +16,7 @@ require 'optparse'
 
 require 'resgen'
 
-class Runner
+class BaseRunner
 
   def initialize
     @descriptors = []
@@ -33,15 +33,15 @@ class Runner
   end
 
   def default_descriptor
-    'resources.rb'
+    raise 'default_descriptor not implemented'
   end
 
   def tool_name
-    'resgen'
+    raise 'tool_name not implemented'
   end
 
   def element_type_name
-    'repository'
+    raise 'repository not implemented'
   end
 
   def element_type_name_char_code
@@ -193,6 +193,20 @@ class Runner
                                                   nil)
 
     exit 0
+  end
+end
+
+class Runner < BaseRunner
+  def default_descriptor
+    'resources.rb'
+  end
+
+  def tool_name
+    'resgen'
+  end
+
+  def element_type_name
+    'repository'
   end
 end
 
