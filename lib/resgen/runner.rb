@@ -44,6 +44,14 @@ class BaseRunner
     raise 'repository not implemented'
   end
 
+  def log_container
+    raise 'log_container not implemented'
+  end
+
+  def template_set_container
+    raise 'template_set_container not implemented'
+  end
+
   def element_type_name_char_code
     @element_type_name_char_code || self.element_type_name[0, 1]
   end
@@ -128,15 +136,15 @@ class BaseRunner
       exit(31)
     end
 
-    if 0 == self.descriptors.size
-      puts "No descriptor specified. Defaulting to #{default_descriptor}" if verbose?
-      self.descriptors << default_descriptor
-    end
-
     Reality::Logging.set_levels(debug? ? ::Logger::DEBUG : verbose? ? ::Logger::INFO : ::Logger::WARN,
-                                Resgen::Logger,
+                                self.log_container.const_get(:Logger),
                                 Reality::Generators::Logger,
                                 Reality::Facets::Logger)
+
+    if 0 == self.descriptors.size
+      puts "No descriptor specified. Defaulting to #{default_descriptor}"
+      self.descriptors << default_descriptor
+    end
 
     if verbose?
       puts "#{Reality::Naming.humanize(self.element_type_name)} Name: #{self.element_name || 'Unspecified'}"
@@ -186,11 +194,11 @@ class BaseRunner
 
     element = Resgen.repository_by_name(self.element_name)
 
-    Resgen::TemplateSetManager.generator.generate(element_type_name.to_sym,
-                                                  element,
-                                                  File.expand_path(self.target_dir),
-                                                  self.generators,
-                                                  nil)
+    self.template_set_container.generator.generate(element_type_name.to_sym,
+                                                   element,
+                                                   File.expand_path(self.target_dir),
+                                                   self.generators,
+                                                   nil)
 
     exit 0
   end
@@ -207,6 +215,14 @@ class Runner < BaseRunner
 
   def element_type_name
     'repository'
+  end
+
+  def log_container
+    Resgen
+  end
+
+  def template_set_container
+    Resgen::TemplateSetManager
   end
 end
 
