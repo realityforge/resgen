@@ -23,6 +23,7 @@ class Runner
     @generators = self.default_generators
     @target_dir = nil
     @element_name = nil
+    @element_type_name_char_code = nil
     @verbose = false
     @debug = false
   end
@@ -44,7 +45,7 @@ class Runner
   end
 
   def element_type_name_char_code
-    self.element_type_name[0, 1]
+    @element_type_name_char_code || self.element_type_name[0, 1]
   end
 
   def default_target_dir
