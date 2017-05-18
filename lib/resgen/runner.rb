@@ -16,134 +16,183 @@ require 'optparse'
 
 require 'resgen'
 
-default_generators = []
-default_descriptor = 'resources.rb'
-tool_name = 'resgen'
-element_type_name = 'repository'
-element_type_name_char_code = nil
-default_target_dir = nil
+class Runner
 
-descriptors = []
-default_target_dir ||= 'generated'
-generators = default_generators
-element_name = nil
-verbose = false
-debug = false
-target_dir = File.expand_path(default_target_dir)
-element_type_name_char_code |= element_type_name[0, 1]
-
-opt_parser = OptionParser.new do |opt|
-  opt.banner = "Usage: #{tool_name} [OPTIONS]"
-  opt.separator ''
-  opt.separator 'Options'
-
-  opt.on('-d', '--descriptor FILENAME', "the filename of a descriptor to be loaded. Many descriptors may be loaded. Defaults to 'resources.rb' if none specified.") do |arg|
-    descriptors << arg
+  def initialize
+    @descriptors = []
+    @generators = self.default_generators
+    @target_dir = nil
+    @element_name = nil
+    @verbose = false
+    @debug = false
   end
 
-  opt.on("-#{element_type_name_char_code}",
-         "--#{element_type_name} NAME",
-         "the name of the #{element_type_name} to load. Defaults to the the name of the only #{element_type_name} if there is only one #{element_type_name} defined by the descriptors, otherwise must be specified.") do |arg|
-    element_name = arg
+  def default_generators
+    []
   end
 
-  opt.on('-g', '--generator GENERATORS', "the comma separated list of generators to run. Defaults to #{default_generators.inspect}") do |arg|
-    generators += arg.split(',').collect{|g|g.to_sym}
+  def default_descriptor
+    'resources.rb'
   end
 
-  opt.on('-t', '--target-dir DIR', "the directory into which to generate artifacts. Defaults to '#{default_target_dir}'.") do |arg|
-    target_dir = arg
+  def tool_name
+    'resgen'
   end
 
-  opt.on('-v', '--verbose', 'turn on verbose logging.') do
-    verbose = true
+  def element_type_name
+    'repository'
   end
 
-  opt.on('--debug', 'turn on debug logging.') do
-    debug = true
+  def element_type_name_char_code
+    self.element_type_name[0, 1]
   end
 
-  opt.on('-h', '--help', 'help') do
-    puts opt_parser
-    exit(53)
+  def default_target_dir
+    'generated'
   end
-end
 
-begin
-  opt_parser.parse!
-rescue => e
-  puts "Error: #{e.message}"
-  exit(53)
-end
+  attr_writer :verbose
 
-if ARGV.length != 0
-  puts 'Unexpected argument passed to command'
-  puts opt_parser
-  exit(31)
-end
+  def verbose?
+    !!@verbose
+  end
 
-if 0 == descriptors.size
-  puts "No descriptor specified. Defaulting to #{default_descriptor}" if verbose
-  descriptors << default_descriptor
-end
+  attr_writer :debug
 
-Reality::Logging.set_levels(debug ? ::Logger::DEBUG : verbose ? ::Logger::INFO : ::Logger::WARN,
-                            Resgen::Logger,
-                            Reality::Generators::Logger,
-                            Reality::Facets::Logger)
+  def debug?
+    !!@debug
+  end
 
-if verbose
-  puts "#{Reality::Naming.humanize(element_type_name)} Name: #{element_name || 'Unspecified'}"
-  puts "Target Dir: #{target_dir}"
-  if descriptors.size == 1
-    puts "Descriptor: #{descriptors[0]}"
-  else
-    puts 'Descriptors:'
-    descriptors.each do |descriptor|
-      puts "\t * #{descriptor}"
+  attr_writer :target_dir
+
+  def target_dir
+    @target_dir || self.default_target_dir
+  end
+
+  attr_accessor :generators
+
+  attr_accessor :descriptors
+
+  attr_accessor :element_name
+
+  def run
+    opt_parser = OptionParser.new do |opt|
+      opt.banner = "Usage: #{tool_name} [OPTIONS]"
+      opt.separator ''
+      opt.separator 'Options'
+
+      opt.on('-d', '--descriptor FILENAME', "the filename of a descriptor to be loaded. Many descriptors may be loaded. Defaults to 'resources.rb' if none specified.") do |arg|
+        self.descriptors << arg
+      end
+
+      opt.on("-#{self.element_type_name_char_code}",
+             "--#{self.element_type_name} NAME",
+             "the name of the #{self.element_type_name} to load. Defaults to the the name of the only #{element_type_name} if there is only one #{self.element_type_name} defined by the descriptors, otherwise must be specified.") do |arg|
+        self.element_name = arg
+      end
+
+      opt.on('-g', '--generator GENERATORS', "the comma separated list of generators to run. Defaults to #{default_generators.inspect}") do |arg|
+        self.generators += arg.split(',').collect { |g| g.to_sym }
+      end
+
+      opt.on('-t', '--target-dir DIR', "the directory into which to generate artifacts. Defaults to '#{self.default_target_dir}'.") do |arg|
+        self.target_dir = arg
+      end
+
+      opt.on('-v', '--verbose', 'turn on verbose logging.') do
+        self.verbose = true
+      end
+
+      opt.on('--debug', 'turn on debug logging.') do
+        self.verbose = true
+        self.debug = true
+      end
+
+      opt.on('-h', '--help', 'help') do
+        puts opt_parser
+        exit(53)
+      end
     end
-  end
-  puts 'Generators:'
-  generators.each do |generator|
-    puts "\t * #{generator}"
+
+    begin
+      opt_parser.parse!
+    rescue => e
+      puts "Error: #{e.message}"
+      exit(53)
+    end
+
+    if ARGV.length != 0
+      puts 'Unexpected argument passed to command'
+      puts opt_parser
+      exit(31)
+    end
+
+    if 0 == self.descriptors.size
+      puts "No descriptor specified. Defaulting to #{default_descriptor}" if verbose?
+      self.descriptors << default_descriptor
+    end
+
+    Reality::Logging.set_levels(debug? ? ::Logger::DEBUG : verbose? ? ::Logger::INFO : ::Logger::WARN,
+                                Resgen::Logger,
+                                Reality::Generators::Logger,
+                                Reality::Facets::Logger)
+
+    if verbose?
+      puts "#{Reality::Naming.humanize(self.element_type_name)} Name: #{self.element_name || 'Unspecified'}"
+      puts "Target Dir: #{self.target_dir}"
+      if self.descriptors.size == 1
+        puts "Descriptor: #{self.descriptors[0]}"
+      else
+        puts 'Descriptors:'
+        self.descriptors.each do |descriptor|
+          puts "\t * #{descriptor}"
+        end
+      end
+      puts 'Generators:'
+      self.generators.each do |generator|
+        puts "\t * #{generator}"
+      end
+    end
+
+    self.descriptors.each do |descriptor|
+      puts "Loading descriptor: #{descriptor}" if verbose?
+      filename = File.expand_path(descriptor)
+      unless File.exist?(filename)
+        puts "Descriptor file #{filename} does not exist"
+        exit(43)
+      end
+      Resgen.current_filename = filename
+      require filename
+      Resgen.current_filename = nil
+      puts "Descriptor loaded: #{descriptor}" if verbose?
+    end
+
+    unless self.element_name
+      element_names = Resgen.repositories.collect { |r| r.name }
+      if element_names.size == 1
+        self.element_name = element_names[0]
+        puts "Derived default #{Reality::Naming.humanize(self.element_type_name)} name: #{self.element_name}" if verbose?
+      else
+        puts "No #{Reality::Naming.humanize(self.element_type_name).downcase} name specified and #{Reality::Naming.humanize(element_type_name).downcase} name could not be determined. Please specify one of the valid #{Reality::Naming.humanize(self.element_type_name).downcase} names: #{element_names.join(', ')}"
+        exit(36)
+      end
+    end
+
+    unless Resgen.repository_by_name?(self.element_name)
+      puts "Specified #{Reality::Naming.humanize(self.element_type_name).downcase} name '#{self.element_name}' does not exist in descriptors."
+      exit(36)
+    end
+
+    element = Resgen.repository_by_name(self.element_name)
+
+    Resgen::TemplateSetManager.generator.generate(element_type_name.to_sym,
+                                                  element,
+                                                  File.expand_path(self.target_dir),
+                                                  self.generators,
+                                                  nil)
+
+    exit 0
   end
 end
 
-descriptors.each do |descriptor|
-  puts "Loading descriptor: #{descriptor}" if verbose
-  filename = File.expand_path(descriptor)
-  unless File.exist?(filename)
-    puts "Descriptor file #{filename} does not exist"
-    exit(43)
-  end
-  Resgen.current_filename = filename
-  require filename
-  Resgen.current_filename = nil
-  puts "Descriptor loaded: #{descriptor}" if verbose
-end
-
-unless element_name
-  element_names = Resgen.repositories.collect { |r| r.name }
-  if element_names.size == 1
-    element_name = element_names[0]
-    puts "Derived default #{Reality::Naming.humanize(element_type_name)} name: #{element_name}" if verbose
-  else
-    puts "No #{Reality::Naming.humanize(element_type_name).downcase} name specified and #{Reality::Naming.humanize(element_type_name).downcase} name could not be determined. Please specify one of the valid #{Reality::Naming.humanize(element_type_name).downcase} names: #{element_names.join(', ')}"
-    exit(36 )
-  end
-end
-
-unless Resgen.repository_by_name?(element_name)
-  puts "Specified #{Reality::Naming.humanize(element_type_name).downcase} name '#{element_name}' does not exist in descriptors."
-  exit(36)
-end
-
-repository = Resgen.repository_by_name(element_name)
-repository.send(:extension_point, :scan_if_required)
-repository.send(:extension_point, :validate)
-
-Resgen::TemplateSetManager.generator.generate(:repository,
-                                              repository,
-                                              File.expand_path(target_dir),
-                                              generators,
-                                              nil)
+Runner.new.run
