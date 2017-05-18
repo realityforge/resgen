@@ -17,15 +17,23 @@ require 'optparse'
 require 'resgen'
 
 default_generators = []
+default_descriptor = 'resources.rb'
+tool_name = 'resgen'
+element_type_name = 'repository'
+element_type_name_char_code = nil
+default_target_dir = nil
 
 descriptors = []
+default_target_dir ||= 'generated'
 generators = default_generators
-repository_name = nil
+element_name = nil
 verbose = false
-target_dir = File.expand_path('generated')
+debug = false
+target_dir = File.expand_path(default_target_dir)
+element_type_name_char_code |= element_type_name[0, 1]
 
 opt_parser = OptionParser.new do |opt|
-  opt.banner = 'Usage: resgen [OPTIONS]'
+  opt.banner = "Usage: #{tool_name} [OPTIONS]"
   opt.separator ''
   opt.separator 'Options'
 
@@ -33,20 +41,26 @@ opt_parser = OptionParser.new do |opt|
     descriptors << arg
   end
 
-  opt.on('-r', '--repository NAME', 'the name of repository to load. Defaults to the loaded repository name if only one repository loaded otherwise must be specified.') do |arg|
-    repository_name = arg
+  opt.on("-#{element_type_name_char_code}",
+         "--#{element_type_name} NAME",
+         "the name of the #{element_type_name} to load. Defaults to the the name of the only #{element_type_name} if there is only one #{element_type_name} defined by the descriptors, otherwise must be specified.") do |arg|
+    element_name = arg
   end
 
   opt.on('-g', '--generator GENERATORS', "the comma separated list of generators to run. Defaults to #{default_generators.inspect}") do |arg|
     generators += arg.split(',').collect{|g|g.to_sym}
   end
 
-  opt.on('-t', '--target-dir DIR', "the directory into which to generate artifacts. Defaults to 'generated'.") do |arg|
+  opt.on('-t', '--target-dir DIR', "the directory into which to generate artifacts. Defaults to '#{default_target_dir}'.") do |arg|
     target_dir = arg
   end
 
   opt.on('-v', '--verbose', 'turn on verbose logging.') do
     verbose = true
+  end
+
+  opt.on('--debug', 'turn on debug logging.') do
+    debug = true
   end
 
   opt.on('-h', '--help', 'help') do
@@ -68,14 +82,20 @@ if ARGV.length != 0
   exit(31)
 end
 
-DEFAULT_DESCRIPTOR = 'resources.rb'
+if 0 == descriptors.size
+  puts "No descriptor specified. Defaulting to #{default_descriptor}" if verbose
+  descriptors << default_descriptor
+end
+
+Reality::Logging.set_levels(debug ? ::Logger::DEBUG : verbose ? ::Logger::INFO : ::Logger::WARN,
+                            Resgen::Logger,
+                            Reality::Generators::Logger,
+                            Reality::Facets::Logger)
 
 if verbose
-  puts "Repository Name: #{repository_name || 'Unspecified'}"
+  puts "#{Reality::Naming.humanize(element_type_name)} Name: #{element_name || 'Unspecified'}"
   puts "Target Dir: #{target_dir}"
-  if descriptors.size == 0
-    puts "Descriptor: #{DEFAULT_DESCRIPTOR} (Default)"
-  elsif descriptors.size < 2
+  if descriptors.size == 1
     puts "Descriptor: #{descriptors[0]}"
   else
     puts 'Descriptors:'
@@ -88,10 +108,6 @@ if verbose
     puts "\t * #{generator}"
   end
 end
-
-descriptors << DEFAULT_DESCRIPTOR if 0 == descriptors.size
-
-Resgen::Logger.level = ::Logger::INFO if verbose
 
 descriptors.each do |descriptor|
   puts "Loading descriptor: #{descriptor}" if verbose
@@ -106,23 +122,23 @@ descriptors.each do |descriptor|
   puts "Descriptor loaded: #{descriptor}" if verbose
 end
 
-unless repository_name
-  repository_names = Resgen.repositories.collect { |r| r.name }
-  if repository_names.size == 1
-    repository_name = repository_names[0]
-    puts "Derived default repository name: #{repository_name}" if verbose
+unless element_name
+  element_names = Resgen.repositories.collect { |r| r.name }
+  if element_names.size == 1
+    element_name = element_names[0]
+    puts "Derived default #{Reality::Naming.humanize(element_type_name)} name: #{element_name}" if verbose
   else
-    puts "No repository name specified and repository name could not be determined. Please specify one of the valid repository names: #{repository_names.join(', ')}"
+    puts "No #{Reality::Naming.humanize(element_type_name).downcase} name specified and #{Reality::Naming.humanize(element_type_name).downcase} name could not be determined. Please specify one of the valid #{Reality::Naming.humanize(element_type_name).downcase} names: #{element_names.join(', ')}"
     exit(36 )
   end
 end
 
-unless Resgen.repository_by_name?(repository_name)
-  puts "Specified repository name '#{repository_name}' does not exist in descriptors."
+unless Resgen.repository_by_name?(element_name)
+  puts "Specified #{Reality::Naming.humanize(element_type_name).downcase} name '#{element_name}' does not exist in descriptors."
   exit(36)
 end
 
-repository = Resgen.repository_by_name(repository_name)
+repository = Resgen.repository_by_name(element_name)
 repository.send(:extension_point, :scan_if_required)
 repository.send(:extension_point, :validate)
 
