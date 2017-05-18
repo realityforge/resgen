@@ -13,6 +13,7 @@ end
 
 class Resgen::TestCase < Minitest::Test
   include Test::Unit::Assertions
+  include Resgen::TestCaseHelpers
 
   def setup
     self.setup_working_dir

@@ -5,9 +5,18 @@ require 'test/unit/assertions'
 require 'securerandom'
 
 module Resgen
-  class TestCase < Minitest::Test
-    include Test::Unit::Assertions
+  module TestUtil
+    # The base test directory
+    def self.base_test_dir
+      File.expand_path("#{File.dirname(__FILE__)}")
+    end
 
+    # The fixtures directory
+    def self.fixture_dir
+      "#{base_test_dir}/fixtures"
+    end
+  end
+  module TestCaseHelpers
     def setup_working_dir
       @cwd = Dir.pwd
 
@@ -36,18 +45,8 @@ module Resgen
       @workspace_dir ||= ENV['TEST_TMP_DIR'] || File.expand_path("#{File.dirname(__FILE__)}/../tmp/workspace")
     end
 
-    # The base test directory
-    def self.base_test_dir
-      File.expand_path("#{File.dirname(__FILE__)}")
-    end
-
-    # The fixtures directory
-    def self.fixture_dir
-      "#{base_test_dir}/fixtures"
-    end
-
     def fixture(fixture_name)
-      "#{self.class.fixture_dir}/#{fixture_name}"
+      "#{TestUtil.fixture_dir}/#{fixture_name}"
     end
 
     def assert_fixture_matches_output(fixture_name, output_filename)
@@ -68,6 +67,21 @@ module Resgen
       output = `#{command}`
       raise "Error executing command: #{command}\nOutput: #{output}" unless $?.success?
       output
+    end
+
+    def assert_output_directories_matches(expected_output_directory, output_directory, template_set_keys)
+      if File.exist?(output_directory)
+        assert_no_diff(output_directory, expected_output_directory)
+      else
+        files = (Dir["#{expected_output_directory}/.*"] + Dir["#{expected_output_directory}/*"])
+        files = files.select { |f| File.basename(f) != '.' && File.basename(f) != '..' }
+
+        # The fixtures signal that it was not expected that a directory was created
+        # by having a directory whos only contents is .keep
+        unless files.size == 1 && File.basename(files[0]) == '.keep'
+          fail "Generator(s) #{template_set_keys.inspect} failed to generate expected directory that matches #{expected_output_directory}"
+        end
+      end
     end
   end
 end

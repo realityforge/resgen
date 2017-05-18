@@ -4,7 +4,7 @@ require File.expand_path('../../helper', __FILE__)
 # fixtures directory as documented in ../../fixtures/README
 class TestFixtures < Resgen::TestCase
 
-  Dir["#{fixture_dir}/*"].select { |base_fixture_name| File.directory?(base_fixture_name) }.each do |base_fixture_name|
+  Dir["#{Resgen::TestUtil.fixture_dir}/*"].select { |base_fixture_name| File.directory?(base_fixture_name) }.each do |base_fixture_name|
     generator_keys = Dir["#{base_fixture_name}/output/*"].
       select { |generator_dir| File.directory?(generator_dir) }.
       collect { |generator_dir| File.basename(generator_dir) }
@@ -41,21 +41,6 @@ class TestFixtures < Resgen::TestCase
     expected_output_directory = "#{base_fixture_name}/output/#{template_set_key}"
 
     assert_output_directories_matches(expected_output_directory, output_directory, [template_set_key])
-  end
-
-  def assert_output_directories_matches(expected_output_directory, output_directory, template_set_keys)
-    if File.exist?(output_directory)
-      assert_no_diff(output_directory, expected_output_directory)
-    else
-      files = (Dir["#{expected_output_directory}/.*"] + Dir["#{expected_output_directory}/*"])
-      files = files.select { |f| File.basename(f) != '.' && File.basename(f) != '..' }
-
-      # The fixtures signal that it was not expected that a directory was created
-      # by having a directory whos only contents is .keep
-      unless files.size == 1 && File.basename(files[0]) == '.keep'
-        fail "Generator(s) #{template_set_keys.inspect} failed to generate expected directory that matches #{expected_output_directory}"
-      end
-    end
   end
 
   def load_repository(base_fixture_name, repository_name)
