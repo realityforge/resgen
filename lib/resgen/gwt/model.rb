@@ -14,6 +14,11 @@
 
 Resgen::FacetManager.facet(:gwt) do |facet|
   facet.enhance(Resgen::Model::AssetDirectory) do
+    def pre_init
+      @bundle_name = nil
+      @with_lookup = false
+    end
+
     attr_writer :bundle_name
 
     def bundle_name
@@ -27,7 +32,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     attr_writer :with_lookup
 
     def with_lookup?
-      !!(@with_lookup ||= false)
+      !!@with_lookup
     end
 
     java_artifact(:client_bundle,
@@ -36,6 +41,15 @@ Resgen::FacetManager.facet(:gwt) do |facet|
   end
 
   facet.enhance(Resgen::Model::UibinderFile) do
+    def pre_init
+      @cell = nil
+      @cell_context = nil
+      @event_handler = false
+      @event_handler_parameter = {}
+      @cell_renderer_name = nil
+      @abstract_ui_component_name = nil
+    end
+
     attr_writer :cell
 
     def cell?
@@ -58,7 +72,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     end
 
     def event_handler?
-      !!(@event_handler ||= false)
+      !!@event_handler
     end
 
     def event_handler_parameter(name, type)
@@ -67,7 +81,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     end
 
     def event_handler_parameters
-      @event_handler_parameter ||= {}
+      @event_handler_parameter
     end
 
     attr_writer :cell_renderer_name

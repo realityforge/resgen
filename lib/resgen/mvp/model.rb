@@ -14,6 +14,10 @@
 
 Resgen::FacetManager.facet(:mvp => [:gwt]) do |facet|
   facet.enhance(Resgen::Model::UibinderFile) do
+    def pre_init
+      @abstract_ui_component_name = nil
+    end
+
     attr_writer :abstract_ui_component_name
 
     def abstract_ui_component_name
