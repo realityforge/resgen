@@ -26,6 +26,10 @@ module Resgen #nodoc
       attr_reader :filename
 
       def pre_generate
+        self.scan_and_validate
+      end
+
+      def scan_and_validate
         extension_point(:scan_if_required)
         extension_point(:validate)
       end
