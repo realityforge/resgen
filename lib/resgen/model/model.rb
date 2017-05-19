@@ -27,13 +27,6 @@ module Resgen #nodoc
   end
 
   class Build
-    class GenerateTask
-      protected
-      def validate_root_element(element)
-        element.send(:extension_point, :scan_if_required)
-        element.send(:extension_point, :validate)
-      end
-    end
     class LoadDescriptor
       def pre_load
         Resgen.current_filename = self.filename
