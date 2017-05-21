@@ -3,4 +3,6 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'resgen/runner'
+require 'resgen'
+
+Resgen::Runner.new.run
