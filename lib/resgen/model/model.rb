@@ -38,37 +38,7 @@ module Resgen #nodoc
     end
   end
 
-  # Need to Test then Release Generators gem
   class Runner < Reality::Generators::BaseRunner
-    def default_descriptor
-      'resources.rb'
-    end
-
-    def tool_name
-      'resgen'
-    end
-
-    def element_type_name
-      'repository'
-    end
-
-    def log_container
-      Resgen
-    end
-
-    def instance_container
-      Resgen
-    end
-
-    def template_set_container
-      Resgen::TemplateSetManager
-    end
-
-    def additional_loggers
-      [Reality::Facets::Logger]
-    end
-
-    # TODO: Everything above here should be implemented by reality-mda
     def pre_load(filename)
       Resgen.current_filename = filename
     end
