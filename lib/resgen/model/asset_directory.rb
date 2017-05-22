@@ -15,11 +15,8 @@
 module Resgen #nodoc
   module Model #nodoc
     class AssetDirectory
-      IMAGE_EXTENSIONS = %w(.png .gif .jpg .jpeg)
-
       def pre_init
         @path = "#{self.catalog.path}/#{self.name.gsub('.', '/')}"
-        @image_files = {}
         @last_updated_at = 0
       end
 
@@ -30,16 +27,8 @@ module Resgen #nodoc
         self.name.gsub(/^.*\.([^.]+)$/, '\1')
       end
 
-      def image_files
-        @image_files.dup
-      end
-
-      def image_file_by_key?(key)
-        !@image_files[key].nil?
-      end
-
-      def image_files?
-        !@image_files.empty?
+      def image_file(name, type, options = {}, &block)
+        ImageFile.new(self, name, type, options, &block)
       end
 
       def scan_if_required
@@ -52,7 +41,7 @@ module Resgen #nodoc
 
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
-            unless image_file_by_key?(data_resource) || image_file_by_key?(Reality::Naming.underscore(data_resource))
+            unless image_file_by_name?(data_resource) || image_file_by_name?(Reality::Naming.underscore(data_resource))
               Resgen.error("Css file #{css_file.filename} contains a data resource '#{data_resource}' that does not align with an image resource named '#{data_resource}' nor '#{Reality::Naming.underscore(data_resource)}' in asset directory '#{self.path}'.")
             end
           end
@@ -69,7 +58,7 @@ module Resgen #nodoc
       end
 
       def scan!
-        image_files = {}
+        image_file_names = {}
         stylesheet_names = []
         gss_stylesheet_names = []
         uibinder_names = []
@@ -79,8 +68,8 @@ module Resgen #nodoc
           f = f.to_s
           next if File.directory?(f)
           extension = File.extname(f)
-          if IMAGE_EXTENSIONS.include?(extension)
-            image_files[File.basename(f, extension)] = f
+          if ImageFile::IMAGE_EXTENSIONS.include?(extension)
+            image_file_names[File.basename(f, extension)] = f
           elsif CssFile::EXTENSION == extension
             stylesheet_names << File.basename(f, extension)
           elsif CssFile::GSS_EXTENSION == extension
@@ -108,15 +97,20 @@ module Resgen #nodoc
           uibinder_file = uibinder_file_by_name?(name) ? uibinder_file_by_name(name) : uibinder_file(name)
           uibinder_file.scan_if_required
           uibinder_file.images.each do |image|
-            image_files.delete(File.basename(image.source, File.extname(image.source)))
+            image_file_names.delete(File.basename(image.source, File.extname(image.source)))
           end
           uibinder_file.datas.each do |data|
-            image_files.delete(File.basename(data.source, File.extname(data.source)))
+            image_file_names.delete(File.basename(data.source, File.extname(data.source)))
           end
+        end
+        image_file_names.each_pair do |image_file_name, filename|
+          image_file = image_file_by_name?(image_file_name) ?
+            image_file_by_name(image_file_name) :
+            image_file(image_file_name, filename)
+          image_file.filename = filename
         end
 
         @last_updated_at = last_updated_at
-        @image_files = image_files
       end
     end
   end

@@ -17,19 +17,19 @@ public interface <%= asset_directory.gwt.bundle_name %>
 <% end -%>
   }
 <% end -%>
-<% image_keys_to_skip = [] -%>
+<% image_names_to_skip = [] -%>
 <% asset_directory.css_files.each do |css_file| -%>
 <% css_file.data_resources.each do |data_resource| -%>
-<% image_keys_to_skip << data_resource if asset_directory.image_file_by_key?(data_resource)  -%>
+<% image_names_to_skip << data_resource if asset_directory.image_file_by_name?(data_resource)  -%>
 
-  @Source( "<%= File.basename(asset_directory.image_files[Reality::Naming.underscore(data_resource)]) %>" )
+  @Source( "<%= File.basename(asset_directory.image_file_by_name(Reality::Naming.underscore(data_resource)).filename) %>" )
   com.google.gwt.resources.client.DataResource <%= data_resource -%>();
 <% end -%>
 <% end -%>
-<% asset_directory.image_files.keys.select{|image_key| !image_keys_to_skip.include?(image_key)}.each do |image_key| -%>
+<% asset_directory.image_file_names.select{|image_name| !image_names_to_skip.include?(image_name)}.each do |image_name| -%>
 
-  @Source( "<%= File.basename(asset_directory.image_files[image_key]) %>" )
-  com.google.gwt.resources.client.ImageResource <%= image_key -%>();
+  @Source( "<%= File.basename(asset_directory.image_file_by_name(image_name).filename) %>" )
+  com.google.gwt.resources.client.ImageResource <%= image_name -%>();
 <% end -%>
 <% asset_directory.css_files.each do |css_file| -%>
 
