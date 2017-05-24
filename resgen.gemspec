@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'reality-facets', '>= 1.8.0'
   s.add_dependency 'reality-generators', '>= 1.12.0'
   s.add_dependency 'reality-naming', '>= 1.9.0'
-  s.add_dependency 'reality-model', '>= 1.1.0'
+  s.add_dependency 'reality-model', '>= 1.2.0'
   s.add_dependency 'reality-orderedhash', '>= 1.0.0'
   s.add_dependency 'sass', '>= 3.4.22'
   s.add_dependency 'nokogiri', '>= 1.6.8.1'
