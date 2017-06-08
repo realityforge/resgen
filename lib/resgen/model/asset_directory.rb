@@ -36,8 +36,8 @@ module Resgen #nodoc
       end
 
       def validate
-        Resgen.error("Asset directory #{self.path} has been removed.") if removed?
-        Resgen.error("Asset directory #{self.path} contains no resources.") if !css_files? && !image_files? && !uibinder_files?
+        Resgen.error("Asset directory '#{self.path}' has been removed.") if removed?
+        Resgen.error("Asset directory '#{self.path}' contains no resources.") if !css_files? && !image_files? && !uibinder_files?
 
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
