@@ -58,7 +58,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
 
     def cell_context
       Resgen.error("Attempted to invoke UibinderFile.gwt.cell_context on '#{uibinder_file.name}' but file is not a cell.") unless cell?
-      @cell_context || "#{uibinder_file.asset_directory.name}.#{uibinder_file.name}"
+      @cell_context || self.qualified_cell_name
     end
 
     def cell_context=(cell_context)
@@ -95,6 +95,10 @@ Resgen::FacetManager.facet(:gwt) do |facet|
       "#{uibinder_file.asset_directory.name}.#{cell_renderer_name}"
     end
 
+    def qualified_cell_name
+      "#{uibinder_file.asset_directory.name}.#{cell_renderer_name.gsub(/Renderer$/,'')}"
+    end
+
     attr_writer :abstract_ui_component_name
 
     def abstract_ui_component_name
@@ -106,6 +110,10 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     end
 
     def qualified_ui_component_name
+      qualified_abstract_ui_component_name.gsub(/(.*)\.Abstract#{uibinder_file.mvp? ? 'Simple' : ''}([^.]+)$/, '\1.\2')
+    end
+
+    def qualified_concrete_component_name
       qualified_abstract_ui_component_name.gsub(/(.*)\.Abstract#{uibinder_file.mvp? ? 'Simple' : ''}([^.]+)$/, '\1.\2')
     end
 
