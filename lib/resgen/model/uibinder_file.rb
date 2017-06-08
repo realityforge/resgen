@@ -52,6 +52,17 @@ module Resgen #nodoc
       end
 
       attr_accessor :type
+
+      # return true if this parameter type is the same as the containing Uibinder file is used for
+      def self?
+        self.type.to_s == self.uibinder_file.qualified_concrete_type_name.to_s
+      end
+
+      def validate
+        if self? && self.name.to_s != 'self'
+          Resgen.error("Uibinder parameter '#{self.name}' in uibinder file '#{self.uibinder_file.filename}' has a type matching container but has the name '#{self.name}' that does not match 'self'")
+        end
+      end
     end
 
     class UibinderStyle
@@ -81,6 +92,10 @@ module Resgen #nodoc
 
       def qualified_type_name
         self.gwt.cell? ? self.gwt.qualified_cell_renderer_name : self.gwt.qualified_abstract_ui_component_name
+      end
+
+      def qualified_concrete_type_name
+        self.gwt.cell? ? self.gwt.qualified_cell_name : self.gwt.qualified_concrete_component_name
       end
 
       def filename

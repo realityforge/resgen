@@ -36,7 +36,7 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
   <%= field.type %> <%= field.name %>;
 <% end -%>
 <% uibinder_file.parameters.each do |parameter| -%>
-  @com.google.gwt.uibinder.client.UiField
+  @com.google.gwt.uibinder.client.UiField<% if parameter.self? %>( provided = true )<% end %>
   <%= parameter.type %> <%= parameter.name %>;
 <% end -%>
 <% uibinder_file.styles.each do |style| -%>
@@ -73,6 +73,9 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 
   protected void createAndBindUi()
   {
+<% uibinder_file.parameters.select{|parameter| parameter.self?}.each do |parameter| -%>
+    <%= parameter.name %> = (<%= parameter.type %>) this;
+<% end -%>
     _widget = UI_BINDER.createAndBindUi( (<%= uibinder_file.gwt.qualified_ui_component_name %>) this );
 <% uibinder_file.styles.each do |style| -%>
     <%= style.name %>.ensureInjected();
