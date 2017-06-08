@@ -16,11 +16,20 @@ module Resgen #nodoc
   module Model #nodoc
     class AssetDirectory
       def pre_init
-        @path = "#{self.catalog.path}/#{self.name.gsub('.', '/')}"
+        @path = nil
         @last_updated_at = 0
       end
 
-      attr_reader :path
+      attr_writer :path
+
+      def path=(path)
+        @path = "#{self.catalog.path}/#{path}"
+      end
+
+      def path
+        @path || "#{self.catalog.path}/#{self.name.gsub('.', '/')}"
+      end
+
       attr_reader :last_updated_at
 
       def short_name
