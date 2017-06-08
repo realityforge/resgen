@@ -65,12 +65,8 @@ module Resgen #nodoc
       attr_accessor :css_classes
 
       def validate
-        container_type =
-          uibinder_file.gwt.cell? ?
-            uibinder_file.gwt.qualified_cell_renderer_name :
-            uibinder_file.gwt.qualified_abstract_ui_component_name
-        expected_style = "#{container_type}.#{Reality::Naming.pascal_case(self.name)}"
-        raise "Uibinder style '#{self.name}' in uibinder file '#{uibinder_file.filename}' expected to have a type of '#{expected_style}'" if expected_style != self.type
+        expected_style = "#{self.uibinder_file.qualified_type_name}.#{Reality::Naming.pascal_case(self.name)}"
+        Resgen.error("Uibinder style '#{self.name}' in uibinder file '#{uibinder_file.filename}' expected to have a type of '#{expected_style}'") if expected_style != self.type
       end
     end
 
@@ -82,6 +78,10 @@ module Resgen #nodoc
       end
 
       include SingleFileModel
+
+      def qualified_type_name
+        self.gwt.cell? ? self.gwt.qualified_cell_renderer_name : self.gwt.qualified_abstract_ui_component_name
+      end
 
       def filename
         @filename ||= "#{self.asset_directory.path}/#{self.name}#{EXTENSION}"
