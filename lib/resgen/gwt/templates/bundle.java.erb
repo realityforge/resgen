@@ -18,18 +18,30 @@ public interface <%= asset_directory.gwt.bundle_name %>
   }
 <% end -%>
 <% image_names_to_skip = [] -%>
+<% data_names_to_skip = [] -%>
 <% asset_directory.css_files.each do |css_file| -%>
-<% css_file.data_resources.each do |data_resource| -%>
-<% image_names_to_skip << data_resource if asset_directory.image_file_by_name?(data_resource)  -%>
+<% css_file.data_resources.each do |data_resource_name| -%>
+<% image_names_to_skip << data_resource_name if asset_directory.image_file_by_name?(data_resource_name) -%>
+<% if asset_directory.image_file_by_name?(data_resource_name) || asset_directory.image_file_by_name?(Reality::Naming.underscore(data_resource_name) ) -%>
 
-  @Source( "<%= File.basename(asset_directory.image_file_by_name(Reality::Naming.underscore(data_resource)).filename) %>" )
-  com.google.gwt.resources.client.DataResource <%= data_resource -%>();
+  @Source( "<%= File.basename(asset_directory.image_file_by_name(Reality::Naming.underscore(data_resource_name)).filename) %>" )
+  com.google.gwt.resources.client.DataResource <%= data_resource_name %>();
+<% end -%>
 <% end -%>
 <% end -%>
 <% asset_directory.image_file_names.select{|image_name| !image_names_to_skip.include?(image_name)}.each do |image_name| -%>
 
   @Source( "<%= File.basename(asset_directory.image_file_by_name(image_name).filename) %>" )
   com.google.gwt.resources.client.ImageResource <%= image_name -%>();
+<% end -%>
+<% asset_directory.data_files.select{|data_file| !data_names_to_skip.include?(data_file.name)}.each do |data_file| -%>
+
+<% unless data_file.embed? -%>
+  @com.google.gwt.resources.client.DataResource.DoNotEmbed
+<% end -%>
+  @com.google.gwt.resources.client.DataResource.MimeType( "<%= data_file.mime_type %>" )
+  @Source( "<%= File.basename(data_file.filename) %>" )
+  com.google.gwt.resources.client.DataResource <%= data_file.name -%>();
 <% end -%>
 <% asset_directory.css_files.each do |css_file| -%>
 

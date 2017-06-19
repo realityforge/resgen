@@ -40,6 +40,10 @@ module Resgen #nodoc
         ImageFile.new(self, name, type, options, &block)
       end
 
+      def data_file(name, type, options = {}, &block)
+        DataFile.new(self, name, type, options, &block)
+      end
+
       def scan_if_required
         scan! if scan?
       end
@@ -50,8 +54,9 @@ module Resgen #nodoc
 
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
-            unless image_file_by_name?(data_resource) || image_file_by_name?(Reality::Naming.underscore(data_resource))
-              Resgen.error("Css file #{css_file.filename} contains a data resource '#{data_resource}' that does not align with an image resource named '#{data_resource}' nor '#{Reality::Naming.underscore(data_resource)}' in asset directory '#{self.path}'.")
+            underscore_name = Reality::Naming.underscore(data_resource)
+            unless image_file_by_name?(data_resource) || image_file_by_name?(underscore_name) || data_file_by_name?(data_resource) || data_file_by_name?(underscore_name)
+              Resgen.error("Css file #{css_file.filename} contains a data resource '#{data_resource}' that does not align with an image resource or data resource named '#{data_resource}' nor '#{underscore_name}' in asset directory '#{self.path}'.")
             end
           end
         end
@@ -68,6 +73,7 @@ module Resgen #nodoc
 
       def scan!
         image_file_names = {}
+        data_file_names = {}
         stylesheet_names = []
         gss_stylesheet_names = []
         uibinder_names = []
@@ -79,6 +85,8 @@ module Resgen #nodoc
           extension = File.extname(f)
           if ImageFile::IMAGE_EXTENSIONS.include?(extension)
             image_file_names[File.basename(f, extension)] = f
+          elsif DataFile::DATA_EXTENSIONS.include?(extension)
+            data_file_names[File.basename(f, extension)] = f
           elsif CssFile::EXTENSION == extension
             stylesheet_names << File.basename(f, extension)
           elsif CssFile::GSS_EXTENSION == extension
@@ -111,12 +119,21 @@ module Resgen #nodoc
           uibinder_file.datas.each do |data|
             image_file_names.delete(File.basename(data.source, File.extname(data.source)))
           end
+          uibinder_file.datas.each do |data|
+            data_file_names.delete(File.basename(data.source, File.extname(data.source)))
+          end
         end
         image_file_names.each_pair do |image_file_name, filename|
           image_file = image_file_by_name?(image_file_name) ?
             image_file_by_name(image_file_name) :
             image_file(image_file_name, filename)
           image_file.filename = filename
+        end
+        data_file_names.each_pair do |data_file_name, filename|
+          data_file = data_file_by_name?(data_file_name) ?
+            data_file_by_name(data_file_name) :
+            data_file(data_file_name, filename)
+          data_file.filename = filename
         end
 
         @last_updated_at = last_updated_at
