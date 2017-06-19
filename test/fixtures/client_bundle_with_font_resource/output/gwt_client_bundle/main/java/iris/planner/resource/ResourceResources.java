@@ -17,7 +17,7 @@ public interface ResourceResources
   }
 
   @com.google.gwt.resources.client.DataResource.DoNotEmbed
-  @com.google.gwt.resources.client.DataResource.MimeType( "application/x-font-woff" )
+  @com.google.gwt.resources.client.DataResource.MimeType( "application/font-woff" )
   @Source( "glyphiconsHalflingsRegular.woff" )
   com.google.gwt.resources.client.DataResource glyphiconsHalflingsRegular();
 
