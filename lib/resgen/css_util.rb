@@ -38,7 +38,7 @@ module Resgen #nodoc
         begin
           root = Sass::SCSS::CssParser.new(css_file_contents, filename, nil).parse
         rescue => _
-          raise BadCssFile, "Unable to parse CSS file #{filename}"
+          raise BadCssFile, "Unable to parse CSS file #{filename} due to #{_}"
         end
 
         root.children.each do |child|
