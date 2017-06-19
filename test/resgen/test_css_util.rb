@@ -166,7 +166,7 @@ CSS
     css_contents = <<CSS
 %.c1 { cursor: pointer; }
 CSS
-    assert_raise Resgen::CssUtil::BadCssFile.new('Unable to parse CSS file myfilename.css') do
+    assert_raise Resgen::CssUtil::BadCssFile.new('Unable to parse CSS file myfilename.css due to Invalid CSS after "": expected selector or at-rule, was "%.c1 { cursor: ..."') do
       Resgen::CssUtil.parse_css(filename, css_contents, :css)
     end
   end
