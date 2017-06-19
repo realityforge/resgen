@@ -20,8 +20,6 @@ module Resgen #nodoc
         @last_updated_at = 0
       end
 
-      attr_writer :path
-
       def path=(path)
         @path = "#{self.catalog.path}/#{path}"
       end
