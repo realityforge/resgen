@@ -14,18 +14,24 @@
 
 module Resgen #nodoc
   class Filters
-    def self.include_catalog_below(path)
-      path = File.expand_path(path)
+    def self.include_catalog_below(*paths)
       Proc.new do |artifact_type, artifact|
-        catalog = catalog_for(artifact_type, artifact)
-        catalog.nil? || (catalog.path.start_with?(path) || path == catalog.path)
+        paths.any?{|path| catalog_in_path(artifact, artifact_type, path)}
       end
+    end
+
+    def self.catalog_in_path(artifact, artifact_type, path)
+      path = File.expand_path(path)
+      catalog = catalog_for(artifact_type, artifact)
+      catalog.nil? || (catalog.path.start_with?(path) || path == catalog.path)
     end
 
     def self.catalog_for(artifact_type, artifact)
       return nil if artifact_type == :repository
       return artifact if artifact_type == :catalog
       return artifact.catalog if artifact_type == :asset_directory
+      return artifact.asset_directory.catalog if artifact_type == :noft_config_file
+      return artifact.noft_config_file.asset_directory.catalog if artifact_type == :noft_icon_file
       return artifact.asset_directory.catalog if artifact_type == :css_file
       return artifact.asset_directory.catalog if artifact_type == :uibinder_file
       return artifact.uibinder_file.asset_directory.catalog if artifact_type == :uibinder_field

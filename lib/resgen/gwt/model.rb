@@ -22,7 +22,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     attr_writer :bundle_name
 
     def bundle_name
-      (@bundle_name ||= nil) || "#{Reality::Naming.pascal_case(asset_directory.short_name)}Resources"
+      @bundle_name || "#{Reality::Naming.pascal_case(asset_directory.short_name)}Resources"
     end
 
     def qualified_bundle_name
@@ -38,6 +38,24 @@ Resgen::FacetManager.facet(:gwt) do |facet|
     java_artifact(:client_bundle,
                   :bundle,
                   :guard => 'asset_directory.css_files? || asset_directory.image_files?')
+  end
+
+  facet.enhance(Resgen::Model::NoftConfigFile) do
+    def pre_init
+      @icon_stamp_name = nil
+    end
+
+    attr_writer :icon_stamp_name
+
+    def icon_stamp_name
+      @icon_stamp_name || "#{Reality::Naming.pascal_case(noft_config_file.name)}Icons"
+    end
+
+    def qualified_icon_stamp_name
+      "#{noft_config_file.asset_directory.name}.#{icon_stamp_name}"
+    end
+
+    java_artifact(:svg_icons, :icon_stamp)
   end
 
   facet.enhance(Resgen::Model::UibinderFile) do

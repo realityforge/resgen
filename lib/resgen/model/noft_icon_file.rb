@@ -23,6 +23,12 @@ module Resgen #nodoc
         perform_init(noft_config_file, name, options, &block)
       end
 
+      def svg_content
+        content = IO.read(self.filename)
+        content = content.gsub(' xmlns="http://www.w3.org/2000/svg"','')
+        content
+      end
+
       attr_accessor :filename
 
       attr_accessor :noft_icon

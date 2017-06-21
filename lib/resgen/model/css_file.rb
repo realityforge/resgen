@@ -29,7 +29,7 @@ module Resgen #nodoc
       end
 
       def filename
-        @filename ||= "#{self.asset_directory.path}/#{self.name}.#{self.type}"
+        "#{self.asset_directory.path}/#{self.name}.#{self.type}"
       end
 
       attr_reader :type

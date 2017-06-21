@@ -37,6 +37,9 @@ require 'resgen/filters'
 
 require 'resgen/css_util'
 
+require 'resgen/base/templates/assets'
+require 'resgen/base/model'
+
 require 'resgen/gwt/helper'
 require 'resgen/gwt/model'
 

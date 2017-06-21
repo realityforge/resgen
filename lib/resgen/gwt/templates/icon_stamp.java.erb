@@ -1,0 +1,62 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(noft_config_file.gwt.qualified_icon_stamp_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public final class <%= noft_config_file.gwt.icon_stamp_name %>
+{
+  private <%= noft_config_file.gwt.icon_stamp_name %>()
+  {
+  }
+<% noft_config_file.icons.each do |icon| -%>
+
+  @javax.annotation.Nonnull
+  public static com.google.gwt.safehtml.shared.SafeHtml <%= Reality::Naming.camelize(icon.name) %>( @javax.annotation.Nullable final String height, @javax.annotation.Nullable final String width, @javax.annotation.Nullable final String cssClassses )
+  {
+    return <%= Reality::Naming.camelize(icon.name) %>( height, width, cssClassses, "img", true );
+  }
+
+  @javax.annotation.Nonnull
+  public static com.google.gwt.safehtml.shared.SafeHtml <%= Reality::Naming.camelize(icon.name) %>( @javax.annotation.Nullable final String height, @javax.annotation.Nullable final String width, @javax.annotation.Nullable final String cssClassses, @javax.annotation.Nullable final String role, @javax.annotation.Nullable final java.lang.Boolean ariaHidden )
+  {
+    return initBuilder( width, height, cssClassses, role, ariaHidden ).appendHtmlConstant( "<%= icon.svg_content.gsub(/.*\<svg /,'').gsub('"','\\"') %>" ).toSafeHtml();
+  }
+<% end -%>
+
+  @javax.annotation.Nonnull
+  private static com.google.gwt.safehtml.shared.SafeHtmlBuilder initBuilder( @javax.annotation.Nullable final String width, @javax.annotation.Nullable final String height, @javax.annotation.Nullable final String cssClassses, @javax.annotation.Nullable final String role, @javax.annotation.Nullable final java.lang.Boolean ariaHidden )
+  {
+    final com.google.gwt.safehtml.shared.SafeHtmlBuilder builder = new com.google.gwt.safehtml.shared.SafeHtmlBuilder();
+    builder.appendHtmlConstant( "<svg ");
+    if( null != ariaHidden )
+    {
+      builder.appendHtmlConstant( "aria-hidden=\"" );
+      builder.append( ariaHidden );
+      builder.appendHtmlConstant( "\" " );
+    }
+    if( null != role )
+    {
+      builder.appendHtmlConstant( "role=\"" );
+      builder.appendHtmlConstant( role );
+      builder.appendHtmlConstant( "\" " );
+    }
+    if( null != cssClassses )
+    {
+      builder.appendHtmlConstant( "class=\"" );
+      builder.appendHtmlConstant( cssClassses );
+      builder.appendHtmlConstant( "\" " );
+    }
+    if( null != width )
+    {
+      builder.appendHtmlConstant( "width=\"" );
+      builder.appendHtmlConstant( width );
+      builder.appendHtmlConstant( "\" " );
+    }
+    if( null != height )
+    {
+      builder.appendHtmlConstant( "height=\"" );
+      builder.appendHtmlConstant( height );
+      builder.appendHtmlConstant( "\" " );
+    }
+    return builder;
+  }
+}

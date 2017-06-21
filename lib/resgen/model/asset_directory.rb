@@ -17,6 +17,7 @@ module Resgen #nodoc
     class AssetDirectory
       def pre_init
         @path = nil
+        @copy_assets_to_target = false
         @last_updated_at = 0
       end
 
@@ -40,6 +41,12 @@ module Resgen #nodoc
 
       def data_file(name, filename, options = {}, &block)
         DataFile.new(self, name, filename, options, &block)
+      end
+
+      attr_writer :copy_assets_to_target
+
+      def copy_assets_to_target?
+        !!@copy_assets_to_target
       end
 
       def scan_if_required
@@ -124,6 +131,10 @@ module Resgen #nodoc
             data_file_names.delete(File.basename(data.source, File.extname(data.source)))
           end
         end
+        noft_config_filenames.each do |noft_config_file_name|
+          data_file_names.delete(noft_config_file_name)
+        end
+
         image_file_names.each_pair do |image_file_name, filename|
           image_file = image_file_by_name?(image_file_name) ?
             image_file_by_name(image_file_name) :
