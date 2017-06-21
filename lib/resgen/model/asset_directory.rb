@@ -34,12 +34,12 @@ module Resgen #nodoc
         self.name.gsub(/^.*\.([^.]+)$/, '\1')
       end
 
-      def image_file(name, type, options = {}, &block)
-        ImageFile.new(self, name, type, options, &block)
+      def image_file(name, filename, options = {}, &block)
+        ImageFile.new(self, name, filename, options, &block)
       end
 
-      def data_file(name, type, options = {}, &block)
-        DataFile.new(self, name, type, options, &block)
+      def data_file(name, filename, options = {}, &block)
+        DataFile.new(self, name, filename, options, &block)
       end
 
       def scan_if_required
