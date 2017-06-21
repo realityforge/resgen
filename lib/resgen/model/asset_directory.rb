@@ -48,7 +48,7 @@ module Resgen #nodoc
 
       def validate
         Resgen.error("Asset directory '#{self.path}' has been removed.") if removed?
-        Resgen.error("Asset directory '#{self.path}' contains no resources.") if !css_files? && !image_files? && !uibinder_files?
+        Resgen.error("Asset directory '#{self.path}' contains no resources.") if !css_files? && !image_files? && !uibinder_files? && !noft_config_files?
 
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
@@ -73,18 +73,21 @@ module Resgen #nodoc
         image_file_names = {}
         data_file_names = {}
         stylesheet_names = []
+        noft_config_filenames = []
         gss_stylesheet_names = []
         uibinder_names = []
 
         last_updated_at = File.mtime(self.path).to_i
         Dir["#{self.path}/*"].sort.each do |f|
-          f = f.to_s
+          f = File.expand_path(f.to_s)
           next if File.directory?(f)
           extension = File.extname(f)
           if ImageFile::IMAGE_EXTENSIONS.include?(extension)
             image_file_names[File.basename(f, extension)] = f
           elsif DataFile::DATA_EXTENSIONS.include?(extension)
             data_file_names[File.basename(f, extension)] = f
+          elsif f =~ /#{Regexp.escape(NoftConfigFile::EXTENSION)}$/
+            noft_config_filenames << File.basename(f, NoftConfigFile::EXTENSION)
           elsif CssFile::EXTENSION == extension
             stylesheet_names << File.basename(f, extension)
           elsif CssFile::GSS_EXTENSION == extension
@@ -132,6 +135,9 @@ module Resgen #nodoc
             data_file_by_name(data_file_name) :
             data_file(data_file_name, filename)
           data_file.filename = filename
+        end
+        noft_config_filenames.each do |noft_config_name|
+          noft_config_file(noft_config_name) unless noft_config_file_by_name?(noft_config_name)
         end
 
         @last_updated_at = last_updated_at
