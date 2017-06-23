@@ -95,6 +95,8 @@ module Resgen #nodoc
               parse_candidate(css_classes, a)
             end
           end
+        elsif candidate.is_a?(Sass::Selector::Id)
+          # Skipped
         elsif candidate.is_a?(Sass::Selector::Attribute)
           # Skipped
         elsif candidate.is_a?(Sass::Selector::Universal)
