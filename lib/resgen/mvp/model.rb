@@ -33,4 +33,3 @@ Resgen::FacetManager.facet(:mvp => [:gwt]) do |facet|
                   :guard => '!uibinder_file.gwt.cell?')
   end
 end
-
