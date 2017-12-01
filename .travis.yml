@@ -3,7 +3,7 @@ sudo: false
 rvm:
   - 2.3.1
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 git:
   depth: 10
 before_install:
