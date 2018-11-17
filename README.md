@@ -1,6 +1,6 @@
 # resgen
 
-[![Build Status](https://secure.travis-ci.org/realityforge/resgen.png?branch=master)](http://travis-ci.org/realityforge/resgen)
+[![Build Status](https://secure.travis-ci.org/realityforge/resgen.svg?branch=master)](http://travis-ci.org/realityforge/resgen)
 
 Resgen is a ruby library that helps you to generate gwt component interfaces from assets.
 
