@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.summary            = %q{A tool to generate resource descriptors from resource assets.}
   s.description        = %q{A tool to generate resource descriptors from resource assets.}
 
-  s.rubyforge_project  = %q{resgen}
 
   s.files              = `git ls-files`.split("\n")
   s.test_files         = `git ls-files -- {spec}/*`.split("\n")
