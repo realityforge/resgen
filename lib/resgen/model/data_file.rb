@@ -18,6 +18,7 @@ module Resgen #nodoc
     class DataFile
       DATA_TYPES = {
         '.woff' => { :mime_type => 'application/font-woff', :default_embed => false },
+        '.woff2' => { :mime_type => 'font/woff2', :default_embed => false },
         '.eot' => { :mime_type => 'application/vnd.ms-fontobject', :default_embed => false },
         '.otf' => { :mime_type => 'font/opentype', :default_embed => false },
         '.ttf' => { :mime_type => 'application/x-font-ttf', :default_embed => false }
