@@ -2,10 +2,17 @@
 package <%= to_package(asset_directory.react4j.qualified_component_factory_name) %>;
 
 @javax.annotation.Generated( "Resgen" )
+@java.lang.SuppressWarnings( "WeakerAccess" )
 public final class <%= asset_directory.react4j.component_factory_name %>
 {
   private <%= asset_directory.react4j.component_factory_name %>()
   {
+  }
+
+  @java.lang.FunctionalInterface
+  public interface IconPropCustomizerFn
+  {
+    void customize( @javax.annotation.Nonnull react4j.dom.proptypes.html.ImgProps props );
   }
 <% asset_directory.data_files.select{|data_file| data_file.mime_type == 'image/svg+xml'}.each do |data_file| -%>
 
@@ -18,6 +25,14 @@ public final class <%= asset_directory.react4j.component_factory_name %>
   @javax.annotation.Nonnull
   public static react4j.ReactNode <%= Reality::Naming.camelize(data_file.name) -%>( @javax.annotation.Nonnull final react4j.dom.proptypes.html.ImgProps props )
   {
+    return react4j.dom.DOM.img( props.src( <%= asset_directory.gwt.qualified_bundle_name %>.INSTANCE.<%= Reality::Naming.camelize(data_file.name) -%>().getSafeUri().asString() ) );
+  }
+
+  @javax.annotation.Nonnull
+  public static react4j.ReactNode <%= Reality::Naming.camelize(data_file.name) -%>( @javax.annotation.Nonnull final IconPropCustomizerFn customizer )
+  {
+    final react4j.dom.proptypes.html.ImgProps props = new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ) );
+    customizer.customize( props );
     return react4j.dom.DOM.img( props.src( <%= asset_directory.gwt.qualified_bundle_name %>.INSTANCE.<%= Reality::Naming.camelize(data_file.name) -%>().getSafeUri().asString() ) );
   }
 <% end -%>
