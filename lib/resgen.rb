@@ -44,3 +44,5 @@ require 'resgen/gwt/helper'
 require 'resgen/gwt/model'
 
 require 'resgen/mvp/model'
+
+require 'resgen/react4j/model'

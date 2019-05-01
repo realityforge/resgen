@@ -1,0 +1,24 @@
+/* DO NOT EDIT: File is auto-generated */
+package <%= to_package(asset_directory.react4j.qualified_component_factory_name) %>;
+
+@javax.annotation.Generated( "Resgen" )
+public final class <%= asset_directory.react4j.component_factory_name %>
+{
+  private <%= asset_directory.react4j.component_factory_name %>()
+  {
+  }
+<% asset_directory.data_files.select{|data_file| data_file.mime_type == 'image/svg+xml'}.each do |data_file| -%>
+
+  @javax.annotation.Nonnull
+  public static react4j.ReactNode <%= Reality::Naming.camelize(data_file.name) -%>()
+  {
+    return <%= Reality::Naming.camelize(data_file.name) -%>( new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().width( "1em" ) ) );
+  }
+
+  @javax.annotation.Nonnull
+  public static react4j.ReactNode <%= Reality::Naming.camelize(data_file.name) -%>( @javax.annotation.Nonnull final react4j.dom.proptypes.html.ImgProps props )
+  {
+    return react4j.dom.DOM.img( props.src( <%= asset_directory.gwt.qualified_bundle_name %>.INSTANCE.<%= Reality::Naming.camelize(data_file.name) -%>().getSafeUri().asString() ) );
+  }
+<% end -%>
+}
