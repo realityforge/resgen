@@ -37,7 +37,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
 
     java_artifact(:client_bundle,
                   :bundle,
-                  :guard => 'asset_directory.css_files? || asset_directory.image_files?')
+                  :guard => 'asset_directory.data_files? || asset_directory.css_files? || asset_directory.image_files?')
   end
 
   facet.enhance(Resgen::Model::NoftConfigFile) do
