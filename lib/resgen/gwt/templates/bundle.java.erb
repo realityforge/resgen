@@ -25,7 +25,7 @@ public interface <%= asset_directory.gwt.bundle_name %>
 <% if asset_directory.image_file_by_name?(data_resource_name) || asset_directory.image_file_by_name?(Reality::Naming.underscore(data_resource_name) ) -%>
 
   @Source( "<%= File.basename(asset_directory.image_file_by_name(Reality::Naming.underscore(data_resource_name)).filename) %>" )
-  com.google.gwt.resources.client.DataResource <%= data_resource_name %>();
+  com.google.gwt.resources.client.DataResource <%= Reality::Naming.camelize(data_resource_name) -%>();
 <% end -%>
 <% end -%>
 <% end -%>
@@ -41,11 +41,11 @@ public interface <%= asset_directory.gwt.bundle_name %>
 <% end -%>
   @com.google.gwt.resources.client.DataResource.MimeType( "<%= data_file.mime_type %>" )
   @Source( "<%= File.basename(data_file.filename) %>" )
-  com.google.gwt.resources.client.DataResource <%= data_file.name -%>();
+  com.google.gwt.resources.client.DataResource <%= Reality::Naming.camelize(data_file.name) -%>();
 <% end -%>
 <% asset_directory.css_files.each do |css_file| -%>
 
   @Source( "<%= File.basename(css_file.filename) %>" )
-  <%= Reality::Naming.pascal_case(css_file.name) %> <%= css_file.name %>();
+  <%= Reality::Naming.pascal_case(css_file.name) %> <%= Reality::Naming.camelize(css_file.name) %>();
 <% end -%>
 }
