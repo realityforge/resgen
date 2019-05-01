@@ -15,7 +15,7 @@ public interface ResourceResources
   }
 
   @Source( "drop_down_arrow.png" )
-  com.google.gwt.resources.client.DataResource drop_down_arrow();
+  com.google.gwt.resources.client.DataResource dropDownArrow();
 
   @Source( "export.gif" )
   com.google.gwt.resources.client.ImageResource export();
