@@ -41,8 +41,10 @@ module Resgen #nodoc
 
       attr_accessor :filename
 
+      attr_writer :mime_type
+
       def mime_type
-        DATA_TYPES[File.extname(self.filename)][:mime_type]
+        @mime_type || DATA_TYPES[File.extname(self.filename)][:mime_type]
       end
     end
   end
