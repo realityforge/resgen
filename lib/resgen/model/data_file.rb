@@ -17,18 +17,19 @@ module Resgen #nodoc
 
     class DataFile
       DATA_TYPES = {
-        '.woff' => { :mime_type => 'application/font-woff', :default_embed => false },
-        '.woff2' => { :mime_type => 'font/woff2', :default_embed => false },
-        '.eot' => { :mime_type => 'application/vnd.ms-fontobject', :default_embed => false },
-        '.otf' => { :mime_type => 'font/opentype', :default_embed => false },
-        '.svg' => { :mime_type => 'image/svg+xml', :default_embed => false },
-        '.ttf' => { :mime_type => 'application/x-font-ttf', :default_embed => false }
+        '.woff' => {:mime_type => 'application/font-woff'},
+        '.woff2' => {:mime_type => 'font/woff2'},
+        '.eot' => {:mime_type => 'application/vnd.ms-fontobject'},
+        '.otf' => {:mime_type => 'font/opentype'},
+        '.svg' => {:mime_type => 'image/svg+xml'},
+        '.ttf' => {:mime_type => 'application/x-font-ttf'}
       }
       DATA_EXTENSIONS = DATA_TYPES.keys
 
       def initialize(asset_directory, name, filename, options = {}, &block)
         @filename = filename
-        @embed = DATA_TYPES[File.extname(self.filename)][:default_embed]
+        data_type_meta = DATA_TYPES[File.extname(self.filename)]
+        @embed = data_type_meta ? data_type_meta[:default_embed] : false
         perform_init(asset_directory, name, options, &block)
       end
 
