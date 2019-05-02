@@ -89,16 +89,18 @@ module Resgen #nodoc
           f = File.expand_path(f.to_s)
           next if File.directory?(f)
           extension = File.extname(f)
+          file_basename = File.basename(f, extension)
+          next if self.image_file_names.include?(file_basename) || self.data_file_names.include?(file_basename) || self.css_file_names.include?(file_basename)
           if ImageFile::IMAGE_EXTENSIONS.include?(extension)
-            image_file_names[File.basename(f, extension)] = f
+            image_file_names[file_basename] = f
           elsif DataFile::DATA_EXTENSIONS.include?(extension)
-            data_file_names[File.basename(f, extension)] = f
+            data_file_names[file_basename] = f
           elsif f =~ /#{Regexp.escape(NoftConfigFile::EXTENSION)}$/
             noft_config_filenames << File.basename(f, NoftConfigFile::EXTENSION)
           elsif CssFile::EXTENSION == extension
-            stylesheet_names << File.basename(f, extension)
+            stylesheet_names << file_basename
           elsif CssFile::GSS_EXTENSION == extension
-            gss_stylesheet_names << File.basename(f, extension)
+            gss_stylesheet_names << file_basename
           elsif f.end_with?(UibinderFile::EXTENSION)
             uibinder_names << File.basename(f, UibinderFile::EXTENSION)
           else
