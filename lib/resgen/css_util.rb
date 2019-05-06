@@ -21,8 +21,8 @@ module Resgen #nodoc
       class CssFragment < Reality::BaseElement
         def initialize(filename, options = {}, &block)
           @filename = filename
-          @css_classes = Reality::OrderedHash.new
-          @data_resources = Reality::OrderedHash.new
+          @css_classes = {}
+          @data_resources = {}
           super(options, &block)
         end
 
