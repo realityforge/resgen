@@ -23,8 +23,6 @@ require 'reality/model'
 
 require 'resgen/model/model'
 require 'resgen/model/single_file_model'
-require 'resgen/model/noft_config_file'
-require 'resgen/model/noft_icon_file'
 require 'resgen/model/css_file'
 require 'resgen/model/data_file'
 require 'resgen/model/image_file'

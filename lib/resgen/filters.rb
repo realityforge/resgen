@@ -30,8 +30,6 @@ module Resgen #nodoc
       return nil if artifact_type == :repository
       return artifact if artifact_type == :catalog
       return artifact.catalog if artifact_type == :asset_directory
-      return artifact.asset_directory.catalog if artifact_type == :noft_config_file
-      return artifact.noft_config_file.asset_directory.catalog if artifact_type == :noft_icon_file
       return artifact.asset_directory.catalog if artifact_type == :css_file
       return artifact.asset_directory.catalog if artifact_type == :uibinder_file
       return artifact.uibinder_file.asset_directory.catalog if artifact_type == :uibinder_field

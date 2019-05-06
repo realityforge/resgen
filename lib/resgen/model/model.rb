@@ -17,8 +17,6 @@ module Resgen #nodoc
     r.model_element(:repository)
     r.model_element(:catalog, :repository, :custom_initialize => true)
     r.model_element(:asset_directory, :catalog)
-    r.model_element(:noft_config_file, :asset_directory)
-    r.model_element(:noft_icon_file, :noft_config_file, :access_method => :icons, :inverse_access_method => :icon, :custom_initialize => true)
     r.model_element(:css_file, :asset_directory)
     r.model_element(:image_file, :asset_directory, :custom_initialize => true)
     r.model_element(:data_file, :asset_directory, :custom_initialize => true)

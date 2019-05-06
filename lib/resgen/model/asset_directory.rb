@@ -55,7 +55,7 @@ module Resgen #nodoc
 
       def validate
         Resgen.error("Asset directory '#{self.path}' has been removed.") if removed?
-        Resgen.error("Asset directory '#{self.path}' contains no resources.") if !css_files? && !data_files? && !image_files? && !uibinder_files? && !noft_config_files?
+        Resgen.error("Asset directory '#{self.path}' contains no resources.") if !css_files? && !data_files? && !image_files? && !uibinder_files?
 
         self.css_files.each do |css_file|
           css_file.data_resources.each do |data_resource|
@@ -80,7 +80,6 @@ module Resgen #nodoc
         image_file_names = {}
         data_file_names = {}
         stylesheet_names = []
-        noft_config_filenames = []
         gss_stylesheet_names = []
         uibinder_names = []
 
@@ -95,8 +94,6 @@ module Resgen #nodoc
             image_file_names[file_basename] = f
           elsif DataFile::DATA_EXTENSIONS.include?(extension)
             data_file_names[file_basename] = f
-          elsif f =~ /#{Regexp.escape(NoftConfigFile::EXTENSION)}$/
-            noft_config_filenames << File.basename(f, NoftConfigFile::EXTENSION)
           elsif CssFile::EXTENSION == extension
             stylesheet_names << file_basename
           elsif CssFile::GSS_EXTENSION == extension
@@ -133,9 +130,6 @@ module Resgen #nodoc
             data_file_names.delete(File.basename(data.source, File.extname(data.source)))
           end
         end
-        noft_config_filenames.each do |noft_config_file_name|
-          data_file_names.delete(noft_config_file_name)
-        end
 
         image_file_names.each_pair do |image_file_name, filename|
           image_file = image_file_by_name?(image_file_name) ?
@@ -148,9 +142,6 @@ module Resgen #nodoc
             data_file_by_name(data_file_name) :
             data_file(data_file_name, filename)
           data_file.filename = filename
-        end
-        noft_config_filenames.each do |noft_config_name|
-          noft_config_file(noft_config_name) unless noft_config_file_by_name?(noft_config_name)
         end
 
         @last_updated_at = last_updated_at
