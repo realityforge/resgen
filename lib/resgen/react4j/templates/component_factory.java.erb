@@ -18,7 +18,7 @@ public final class <%= asset_directory.react4j.component_factory_name %>
 
   @javax.annotation.Nonnull
   public static react4j.ReactNode <%= Reality::Naming.camelize(data_file.name) -%>()
-  { <%# width style needed for IE11 support %>
+  {<%# width style needed for IE11 support %>
     return <%= Reality::Naming.camelize(data_file.name) -%>( new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ).width( "1em" ) ) );
   }
 
@@ -30,7 +30,7 @@ public final class <%= asset_directory.react4j.component_factory_name %>
 
   @javax.annotation.Nonnull
   public static react4j.ReactNode <%= Reality::Naming.camelize(data_file.name) -%>( @javax.annotation.Nonnull final IconPropCustomizerFn customizer )
-  { <%# width style needed for IE11 support %>
+  {<%# width style needed for IE11 support %>
     final react4j.dom.proptypes.html.ImgProps props = new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ).width( "1em" ) );
     customizer.customize( props );
     return react4j.dom.DOM.img( props.src( <%= asset_directory.gwt.qualified_bundle_name %>.INSTANCE.<%= Reality::Naming.camelize(data_file.name) -%>().getSafeUri().asString() ) );
