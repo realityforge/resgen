@@ -18,7 +18,7 @@ public final class ResourceComponents
   @javax.annotation.Nonnull
   public static react4j.ReactNode clock()
   {
-    return clock( new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ) ) );
+    return clock( new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ).width( "1em" ) ) );
   }
 
   @javax.annotation.Nonnull
@@ -30,7 +30,7 @@ public final class ResourceComponents
   @javax.annotation.Nonnull
   public static react4j.ReactNode clock( @javax.annotation.Nonnull final IconPropCustomizerFn customizer )
   {
-    final react4j.dom.proptypes.html.ImgProps props = new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ) );
+    final react4j.dom.proptypes.html.ImgProps props = new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ).width( "1em" ) );
     customizer.customize( props );
     return react4j.dom.DOM.img( props.src( iris.planner.resource.ResourceResources.INSTANCE.clock().getSafeUri().asString() ) );
   }
@@ -38,7 +38,7 @@ public final class ResourceComponents
   @javax.annotation.Nonnull
   public static react4j.ReactNode dotCircle()
   {
-    return dotCircle( new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ) ) );
+    return dotCircle( new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ).width( "1em" ) ) );
   }
 
   @javax.annotation.Nonnull
@@ -50,7 +50,7 @@ public final class ResourceComponents
   @javax.annotation.Nonnull
   public static react4j.ReactNode dotCircle( @javax.annotation.Nonnull final IconPropCustomizerFn customizer )
   {
-    final react4j.dom.proptypes.html.ImgProps props = new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ) );
+    final react4j.dom.proptypes.html.ImgProps props = new react4j.dom.proptypes.html.ImgProps().style( new react4j.dom.proptypes.html.CssProps().height( "1em" ).width( "1em" ) );
     customizer.customize( props );
     return react4j.dom.DOM.img( props.src( iris.planner.resource.ResourceResources.INSTANCE.dotCircle().getSafeUri().asString() ) );
   }
