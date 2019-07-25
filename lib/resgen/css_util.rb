@@ -59,7 +59,7 @@ module Resgen #nodoc
             clause.members.each do |e|
               parse_candidate(css_classes, e)
             end
-          end
+          end if child.parsed_rules
         elsif child.is_a?(Sass::Tree::DirectiveNode)
           if child.name == '@media'
             child.children.each do |node|
