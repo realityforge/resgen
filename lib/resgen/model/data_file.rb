@@ -30,6 +30,7 @@ module Resgen #nodoc
         @filename = filename
         data_type_meta = DATA_TYPES[File.extname(self.filename)]
         @embed = data_type_meta ? data_type_meta[:default_embed] : false
+        @mime_type = nil
         perform_init(asset_directory, name, options, &block)
       end
 
