@@ -2,6 +2,7 @@
 package <%= to_package(uibinder_file.mvp.qualified_abstract_ui_component_name) %>;
 
 @javax.annotation.Generated( "Resgen" )
+@java.lang.SuppressWarnings( "PMD.FieldDeclarationsShouldBeAtStartOfClass" )
 public abstract class <%= uibinder_file.mvp.abstract_ui_component_name %><P extends org.realityforge.gwt.mmvp.Presenter>
   extends <%= uibinder_file.gwt.qualified_abstract_ui_component_name %>
   implements org.realityforge.gwt.mmvp.View<P>

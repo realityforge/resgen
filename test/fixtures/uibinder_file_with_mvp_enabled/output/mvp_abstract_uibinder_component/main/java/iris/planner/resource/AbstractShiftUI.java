@@ -2,6 +2,7 @@
 package iris.planner.resource;
 
 @javax.annotation.Generated( "Resgen" )
+@java.lang.SuppressWarnings( "PMD.FieldDeclarationsShouldBeAtStartOfClass" )
 public abstract class AbstractShiftUI<P extends org.realityforge.gwt.mmvp.Presenter>
   extends iris.planner.resource.AbstractSimpleShiftUI
   implements org.realityforge.gwt.mmvp.View<P>
