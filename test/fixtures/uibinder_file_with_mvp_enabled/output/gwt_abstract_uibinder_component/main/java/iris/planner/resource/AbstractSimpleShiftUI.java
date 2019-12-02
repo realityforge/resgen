@@ -2,7 +2,7 @@
 package iris.planner.resource;
 
 @javax.annotation.Generated( "Resgen" )
-@java.lang.SuppressWarnings( { "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.ConstructorCallsOverridableMethod" } )
+@java.lang.SuppressWarnings( { "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.ConstructorCallsOverridableMethod", "rawtypes" } )
 public abstract class AbstractSimpleShiftUI
   implements com.google.gwt.user.client.ui.IsWidget
 {
