@@ -3,6 +3,7 @@ package iris.planner.resource;
 
 @javax.annotation.Generated( "Resgen" )
 @java.lang.SuppressWarnings( { "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.ConstructorCallsOverridableMethod", "rawtypes" } )
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings( "PCOA_PARTIALLY_CONSTRUCTED_OBJECT_ACCESS" )
 public abstract class AbstractShiftUI
   implements com.google.gwt.user.client.ui.IsWidget
 {
