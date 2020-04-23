@@ -3,6 +3,7 @@ package iris.planner.resource;
 
 @javax.annotation.Generated( "Resgen" )
 @com.google.gwt.uibinder.client.UiTemplate( "RosterTreeCell.ui.xml" )
+@java.lang.SuppressWarnings( "rawtypes" )
 public interface RosterTreeCellRenderer
   extends com.google.gwt.uibinder.client.UiRenderer
 {

@@ -3,6 +3,7 @@ package iris.planner.resource;
 
 @javax.annotation.Generated( "Resgen" )
 @com.google.gwt.uibinder.client.UiTemplate( "ResourceTreeCell.ui.xml" )
+@java.lang.SuppressWarnings( "rawtypes" )
 public interface ResourceTreeCellRenderer
   extends com.google.gwt.uibinder.client.UiRenderer
 {
