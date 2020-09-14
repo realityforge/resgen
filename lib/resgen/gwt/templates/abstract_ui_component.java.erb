@@ -34,7 +34,7 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 
   private com.google.gwt.user.client.ui.Widget _widget;
 <% uibinder_file.fields.each do |field| -%>
-  @com.google.gwt.uibinder.client.UiField
+  @com.google.gwt.uibinder.client.UiField<% if field.provided? %>( provided = true )<% end %>
   <%= field.type %> <%= field.name %>;
 <% end -%>
 <% uibinder_file.parameters.each do |parameter| -%>

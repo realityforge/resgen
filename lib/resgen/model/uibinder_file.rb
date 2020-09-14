@@ -25,6 +25,12 @@ module Resgen #nodoc
       end
 
       attr_accessor :type
+
+      attr_writer :provided
+
+      def provided?
+        @provided.nil? ? false : !!@provided
+      end
     end
 
     class UibinderData
