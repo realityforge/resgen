@@ -21,6 +21,7 @@ module Resgen #nodoc
     class UibinderField
       def initialize(uibinder_file, name, type, options = {}, &block)
         @type = type
+        @provided = false
         perform_init(uibinder_file, name, options, &block)
       end
 
@@ -29,7 +30,7 @@ module Resgen #nodoc
       attr_writer :provided
 
       def provided?
-        @provided.nil? ? false : !!@provided
+        !!@provided
       end
     end
 
