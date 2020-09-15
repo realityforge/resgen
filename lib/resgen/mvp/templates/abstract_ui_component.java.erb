@@ -34,6 +34,11 @@ public abstract class <%= uibinder_file.mvp.abstract_ui_component_name %><P exte
     _presenter = null;
   }
 
+  protected boolean isBound()
+  {
+    return null != _presenter;
+  }
+
   @java.lang.SuppressWarnings( "NullableProblems" )
   @javax.annotation.Nonnull
   protected P getPresenter()
