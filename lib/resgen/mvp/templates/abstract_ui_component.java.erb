@@ -38,13 +38,6 @@ public abstract class <%= uibinder_file.mvp.abstract_ui_component_name %><P exte
   @javax.annotation.Nonnull
   protected P getPresenter()
   {
-    if ( null == _presenter )
-    {
-      throw new java.lang.IllegalStateException( "Attempting to call getPresenter() when null" );
-    }
-    else
-    {
-      return _presenter;
-    }
+    return java.util.Objects.requireNonNull( _presenter, "Attempting to call getPresenter() when null" );
   }
 }
