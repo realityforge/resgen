@@ -34,17 +34,15 @@ public abstract class AbstractShiftUI<P extends org.realityforge.gwt.mmvp.Presen
     _presenter = null;
   }
 
+  protected boolean isBound()
+  {
+    return null != _presenter;
+  }
+
   @java.lang.SuppressWarnings( "NullableProblems" )
   @javax.annotation.Nonnull
   protected P getPresenter()
   {
-    if ( null == _presenter )
-    {
-      throw new java.lang.IllegalStateException( "Attempting to call getPresenter() when null" );
-    }
-    else
-    {
-      return _presenter;
-    }
+    return java.util.Objects.requireNonNull( _presenter, "Attempting to call getPresenter() when null" );
   }
 }
