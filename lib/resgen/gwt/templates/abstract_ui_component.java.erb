@@ -88,7 +88,7 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 <% (uibinder_file.fields + uibinder_file.parameters).each do |field| -%>
 <% if field.type.to_s == asset_directory.gwt.qualified_bundle_name.to_s -%>
 <% asset_directory.css_files.each do |css_file| -%>
-    <%= field.name %>.<%= css_file.name %>().ensureInjected();
+    <%= field.name %>.<%= Reality::Naming.camelize(css_file.name) %>().ensureInjected();
 <% end -%>
 <% end -%>
 <% end -%>
