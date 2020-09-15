@@ -21,11 +21,18 @@ module Resgen #nodoc
     class UibinderField
       def initialize(uibinder_file, name, type, options = {}, &block)
         @type = type
+        @type_parameters = nil
         @provided = false
         perform_init(uibinder_file, name, options, &block)
       end
 
-      attr_accessor :type
+      attr_writer :type
+
+      def type
+        "#{@type}#{self.type_parameters.nil? ? "" : "<#{self.type_parameters}>"}"
+      end
+
+      attr_accessor :type_parameters
 
       attr_writer :provided
 
