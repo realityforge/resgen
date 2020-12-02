@@ -23,6 +23,7 @@ module Resgen #nodoc
         @type = type
         @type_parameters = nil
         @provided = false
+        @path = nil
         perform_init(uibinder_file, name, options, &block)
       end
 
@@ -38,6 +39,12 @@ module Resgen #nodoc
 
       def provided?
         !!@provided
+      end
+
+      attr_accessor :path
+
+      def path?
+        !!@path
       end
     end
 
