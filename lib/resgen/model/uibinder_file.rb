@@ -23,7 +23,8 @@ module Resgen #nodoc
         @type = type
         @type_parameters = nil
         @provided = false
-        @path = nil
+        @editor_path = nil
+        @editor_ignore = nil
         perform_init(uibinder_file, name, options, &block)
       end
 
@@ -41,16 +42,16 @@ module Resgen #nodoc
         !!@provided
       end
 
-      attr_accessor :path
+      attr_accessor :editor_path
 
-      def path?
-        !!@path
+      def editor_path?
+        !!@editor_path
       end
 
-      attr_accessor :ignore
+      attr_writer :editor_ignore
 
-      def ignore?
-        !!@ignore
+      def editor_ignore?
+        !!@editor_ignore
       end
     end
 

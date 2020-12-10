@@ -34,9 +34,9 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 
   private com.google.gwt.user.client.ui.Widget _widget;
 <% uibinder_file.fields.each do |field| -%>
-<% if field.path? %>  @com.google.gwt.editor.client.Editor.Path("<%= field.path %>")
+<% if field.editor_path? %>  @com.google.gwt.editor.client.Editor.Path("<%= field.editor_path %>")
 <% end -%>
-<% if field.ignore? %>  @com.google.gwt.editor.client.Editor.Ignore
+<% if field.editor_ignore? %>  @com.google.gwt.editor.client.Editor.Ignore
 <% end -%>
   @com.google.gwt.uibinder.client.UiField<% if field.provided? %>( provided = true )<% end %>
   <%= field.type %> <%= field.name %>;
