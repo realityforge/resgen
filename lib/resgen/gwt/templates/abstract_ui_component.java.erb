@@ -60,7 +60,7 @@ public abstract class <%= uibinder_file.gwt.abstract_ui_component_name %>
 
   protected <%= uibinder_file.gwt.abstract_ui_component_name %>()
   {
-    this( true );
+    this( <%= !uibinder_file.fields.any?{ |field| field.provided? } -%> );
   }
 
   protected <%= uibinder_file.gwt.abstract_ui_component_name %>( final boolean createAndBindUi )
