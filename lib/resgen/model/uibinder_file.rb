@@ -46,6 +46,12 @@ module Resgen #nodoc
       def path?
         !!@path
       end
+
+      attr_accessor :ignore
+
+      def ignore?
+        !!@ignore
+      end
     end
 
     class UibinderData
