@@ -30,6 +30,7 @@ Resgen::FacetManager.facet(:mvp => [:gwt]) do |facet|
 
     java_artifact(:abstract_uibinder_component,
                   :abstract_ui_component,
+                  :output_filter => Resgen::GenUtil.output_filter,
                   :guard => '!uibinder_file.gwt.cell?')
   end
 end

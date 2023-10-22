@@ -30,6 +30,7 @@ Resgen::FacetManager.facet(:react4j => [:gwt]) do |facet|
 
     java_artifact(:components,
                   :component_factory,
+                  :output_filter => Resgen::GenUtil.output_filter,
                   :guard => 'asset_directory.data_files.any?{|data_file| data_file.mime_type == "image/svg+xml"}')
 
   end

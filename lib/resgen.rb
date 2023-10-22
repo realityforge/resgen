@@ -33,6 +33,8 @@ require 'resgen/model/repository'
 
 require 'resgen/filters'
 
+require 'resgen/gen_util'
+
 require 'resgen/css_util'
 
 require 'resgen/base/templates/assets'

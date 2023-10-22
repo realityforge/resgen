@@ -37,6 +37,7 @@ Resgen::FacetManager.facet(:gwt) do |facet|
 
     java_artifact(:client_bundle,
                   :bundle,
+                  :output_filter => Resgen::GenUtil.output_filter,
                   :guard => 'asset_directory.data_files? || asset_directory.css_files? || asset_directory.image_files?')
   end
 
@@ -119,9 +120,11 @@ Resgen::FacetManager.facet(:gwt) do |facet|
 
     java_artifact(:abstract_uibinder_component,
                   :abstract_ui_component,
+                  :output_filter => Resgen::GenUtil.output_filter,
                   :guard => '!uibinder_file.gwt.cell?')
     java_artifact(:abstract_uibinder_component,
                   :cell_renderer,
+                  :output_filter => Resgen::GenUtil.output_filter,
                   :guard => 'uibinder_file.gwt.cell?')
   end
 end
