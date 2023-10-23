@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
 
   s.rdoc_options       = %w(--line-numbers --inline-source --title resgen)
 
-  s.add_dependency 'reality-mda', '>= 1.9.0'
+  s.add_dependency 'reality-mda', '>= 1.10.0'
   s.add_dependency 'reality-core', '>= 1.8.0'
   s.add_dependency 'reality-facets', '>= 1.12.0'
-  s.add_dependency 'reality-generators', '>= 1.20.0'
+  s.add_dependency 'reality-generators', '>= 1.21.0'
   s.add_dependency 'reality-naming', '>= 1.13.0'
   s.add_dependency 'reality-model', '>= 1.4.0'
   s.add_dependency 'sass', '>= 3.4.22'
