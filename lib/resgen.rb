@@ -13,7 +13,7 @@
 #
 
 require 'sass/css'
-require 'nokogiri'
+require 'rexml/document'
 
 require 'reality/mda'
 require 'reality/core'

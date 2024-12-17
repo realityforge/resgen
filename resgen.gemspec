@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'reality-naming', '>= 1.13.0'
   s.add_dependency 'reality-model', '>= 1.4.0'
   s.add_dependency 'sass', '>= 3.4.22'
-  s.add_dependency 'nokogiri', '>= 1.6.8.1'
 
   s.add_development_dependency(%q<minitest>, ['= 5.9.1'])
   s.add_development_dependency(%q<test-unit>, ['= 3.1.5'])

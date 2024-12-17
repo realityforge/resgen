@@ -12,6 +12,8 @@
 # limitations under the License.
 #
 
+require 'rexml/document'
+
 module Resgen #nodoc
   module Model #nodoc
 
@@ -167,21 +169,18 @@ module Resgen #nodoc
         unhandled_datas = data_map.keys.dup
 
         begin
-          doc = Nokogiri::XML(contents) do |config|
-            config.options = Nokogiri::XML::ParseOptions::STRICT | Nokogiri::XML::ParseOptions::NONET
-          end
+          doc = REXML::Document.new(contents)
 
           package_prefixes = {}
-
-          doc.collect_namespaces.each_pair do |key, url|
+          doc.root.namespaces.each do |key, url|
             if url.start_with?('urn:import:')
-              package_prefixes[key.gsub(/^xmlns\:/, '')] = url.gsub(/^urn\:import\:/, '')
+              package_prefixes[key.gsub(/^xmlns:/, '')] = url.gsub(/^urn:import:/, '')
             end
           end
 
-          doc.xpath('//ui:with', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |with_element|
-            name = with_element['field']
-            type = with_element['type']
+          REXML::XPath.each(doc, '//ui:with', { 'ui' => 'urn:ui:com.google.gwt.uibinder' }) do |with_element|
+            name = with_element.attributes['field']
+            type = with_element.attributes['type']
             if parameter_by_name?(name)
               parameter_by_name(name).type = type
             else
@@ -190,12 +189,12 @@ module Resgen #nodoc
             unhandled_parameters.delete(name)
           end
 
-          doc.xpath('//ui:style[@type]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
-            specified_name = element['field']
+          REXML::XPath.each(doc, '//ui:style[@type]', { 'ui' => 'urn:ui:com.google.gwt.uibinder' }) do |element|
+            specified_name = element.attributes['field']
             Resgen.error("Uibinder file '#{self.name}' explicitly names style field 'style' which matches default value for field.") if specified_name == 'style'
             name = specified_name || 'style'
-            type = element['type']
-            gss = (element['gss'] || 'false').downcase == 'true'
+            type = element.attributes['type']
+            gss = (element.attributes['gss'] || 'false').downcase == 'true'
             css_fragment = Resgen::CssUtil.parse_css(self.filename, element.text, gss ? :gss : :css)
             css_classes = css_fragment.css_classes
             if style_by_name?(name)
@@ -208,9 +207,9 @@ module Resgen #nodoc
             unhandled_styles.delete(name)
           end
 
-          doc.xpath('//ui:data[@field]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
-            name = element['field']
-            src = element['src']
+          REXML::XPath.each(doc, '//ui:data[@field]', { 'ui' => 'urn:ui:com.google.gwt.uibinder' }) do |element|
+            name = element.attributes['field']
+            src = element.attributes['src']
             if data_by_name?(name)
               data_by_name(name).source = src
             else
@@ -219,9 +218,9 @@ module Resgen #nodoc
             unhandled_datas.delete(name)
           end
 
-          doc.xpath('//ui:image[@field]', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |element|
-            name = element['field']
-            src = element['src']
+          REXML::XPath.each(doc, '//ui:image[@field]', { 'ui' => 'urn:ui:com.google.gwt.uibinder' }) do |element|
+            name = element.attributes['field']
+            src = element.attributes['src']
             if image_by_name?(name)
               image_by_name(name).source = src
             else
@@ -230,12 +229,13 @@ module Resgen #nodoc
             unhandled_images.delete(name)
           end
 
-          doc.xpath('//@ui:field', 'ui' => 'urn:ui:com.google.gwt.uibinder').each do |field_attribute|
-            element = field_attribute.parent
+          REXML::XPath.each(doc, '//@ui:field', { 'ui' => 'urn:ui:com.google.gwt.uibinder' }) do |field_attribute|
+            element = field_attribute.element
 
-            package_name = element.namespace.nil? ? 'com.google.gwt.dom.client' : package_prefixes[element.namespace.prefix]
-            classname = element.namespace.nil? ? (ELEMENT_NAME_MAP[element.name] || 'Element') : element.name
-
+            is_html = element.namespace.to_s.empty?
+            package_name = is_html ? 'com.google.gwt.dom.client' : package_prefixes[element.prefix]
+            classname = is_html ? (ELEMENT_NAME_MAP[element.name] || 'Element') : element.name
+            
             name = field_attribute.value
             type = "#{package_name}.#{classname}"
 
